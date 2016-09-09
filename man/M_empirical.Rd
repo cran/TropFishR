@@ -40,12 +40,12 @@ curve for weight.}
 \item{Bl}{body length in cm.}
 
 \item{schooling}{logical; if TRUE it is accounted for the schooling behaviour of
-the species. Default is FALSE.}
+the species, only for Pauly's methods. Default is FALSE.}
 
 \item{method}{vector of method names. Any combination of following methods can
-be employed: "AlversonCarney","Gislason","GundersonDygert","Hoenig",
-"Lorenzen","Pauly_Linf","Pauly_Winf","PetersonWroblewski",
-"RikhterEfanov","Roff". Please refer to Details to see which input parameters
+be employed: "AlversonCarney", "Gislason", "GundersonDygert", "Hoenig",
+"Lorenzen", "Pauly_Linf", "Pauly_Winf", "PetersonWroblewski",
+"RikhterEfanov", "Roff". Please refer to Details to see which input parameters
 are required by each method.}
 }
 \value{

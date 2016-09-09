@@ -4,81 +4,112 @@
 \alias{ELEFAN}
 \title{ELEFAN}
 \usage{
-ELEFAN(param, Linf_fix = NA, Linf_range = NA, K_range = exp(seq(log(0.1),
+ELEFAN(x, Linf_fix = NA, Linf_range = NA, K_range = exp(seq(log(0.1),
   log(10), length.out = 100)), C = 0, WP = 0, MA = 5, addl.sqrt = FALSE,
+  agemax = NULL, flagging.out = TRUE, hide.progressbar = FALSE,
   plot = FALSE)
 }
 \arguments{
-\item{param}{a list consisting of following parameters:
+\item{x}{a list consisting of following parameters:
 \itemize{
   \item \strong{midLengths} midpoints of the length classes,
   \item \strong{dates} dates of sampling times (class Date),
-  \item \strong{catch} matrix with catches/counts per length class (row) and sampling date (column);
+  \item \strong{catch} matrix with catches/counts per length class (row)
+     and sampling date (column);
 }}
 
-\item{Linf_fix}{numeric; if used the K-Scan method is applied with a fixed Linf value (i.e. varying K only).}
+\item{Linf_fix}{numeric; if used the K-Scan method is applied with a fixed
+Linf value (i.e. varying K only).}
 
-\item{Linf_range}{numeric vector with potential Linf values. Default is the last length class plus/minus 5 cm}
+\item{Linf_range}{numeric vector with potential Linf values. Default is the
+last length class plus/minus 5 cm}
 
-\item{K_range}{K values for which the score of growth functions should be calculated
+\item{K_range}{K values for which the score of growth functions should be
+calculated
 (by default: exp(seq(log(0.1),log(10),length.out = 100)))}
 
 \item{C}{growth oscillation amplitude (default: 0)}
 
-\item{WP}{winter point (default: 0)}
+\item{WP}{onset of the first oscillation relative to t0 (winter point, default: 0)}
 
-\item{MA}{number indicating over how many length classes the moving average should be performed (defalut: 5, for
+\item{MA}{number indicating over how many length classes the moving average
+should be performed (defalut: 5, for
 more information see \link{lfqRestructure}).}
 
 \item{addl.sqrt}{Passed to \link{lfqRestructure}. Applied an additional square-root transformation of positive values according to Brey et al. (1988).
 (default: FALSE, for more information see \link{lfqRestructure}).}
 
-\item{plot}{logical; indicating if plot with restrucutred frequencies and growth curves should
+\item{agemax}{maximum age of species; default NULL, then estimated from Linf}
+
+\item{flagging.out}{logical; should positive peaks be flagged out? (Default : TRUE)}
+
+\item{hide.progressbar}{logical; should the progress bar be hidden? (default: FALSE)}
+
+\item{plot}{logical; indicating if plot with restructured frequencies and growth curves should
 be displayed}
 }
 \value{
 A list with the input parameters and following list objects:
 \itemize{
-  \item \strong{samplingPeriod}: length of sampling period in years,
-  \item \strong{samplingDays}: time of sampling times in relation to first sampling time,
-  \item \strong{delta_t}: array with time differences between relative sampling time set to zero and
-     other sampling times,
   \item \strong{rcounts}: restructured frequencies,
   \item \strong{peaks_mat}: matrix with positive peaks with distinct values,
-  \item \strong{ASP}: available sum of peaks, sum of posititve peaks which could be potential be hit by
+  \item \strong{ASP}: available sum of peaks, sum of posititve peaks which
+     could be potential be hit by
      growth curves,
-  \item \strong{score_mat}: matrix with scores for each Linf (only Linf_fix) and K combination,
-  \item \strong{ESP_starting_point_L}: array with best starting points for each Linf
-     (only Linf_fix) and K combination,
-  \item \strong{C}: amplitude of growth oscillation,
-  \item \strong{WP}: winter point winter point (WP = ts + 0.5);
-when the K-Scan method is applied (fixed Linf) in addition following parameters:
-  \item \strong{Rn_max}: highest score value,
-  \item \strong{Linf_fix}: fixed Linf (asymptotic length of VBGF),
-  \item \strong{K_opt}: curving factor (of VBGF, K) which returns best score,
-  \item \strong{startingPoints}: starting sample and starting length yielding in best fit;
+  \item \strong{score_mat}: matrix with scores for each Linf (only Linf_fix)
+   and K combination,
+  \item \strong{t_anchor_mat}: maximum age of species,
+  \item \strong{ncohort}: number of cohorts used for estimation,
+  \item \strong{agemax}: maximum age of species,
+  \item \strong{par}: a list with the parameters of the von Bertalanffy growth
+     function:
+     \itemize{
+       \item \strong{Linf}: length infinity in cm,
+       \item \strong{K}: curving coefficient;
+       \item \strong{t_anchor}: time point anchoring growth curves in year-length
+         coordinate system, corrsponds to peak spawning month,
+       \item \strong{C}: amplitude of growth oscillation
+         (if \code{seasonalised} = TRUE),
+       \item \strong{ts}: summer point of oscillation (ts = WP - 0.5)
+         (if \code{seasonalised} = TRUE);
+     }
+  \item \strong{Rn_max}: highest score value
 }
 }
 \description{
 Electronic LEngth Frequency ANalysis for estimating growth parameter.
 }
 \details{
-This functions allows to perform the K-Scan and Response surface analysis to estimate growth parameters.
-   It combines the step of restructuring length-frequency data (\link{lfqRestructure}) followed by the fitting of VBGF
-   curves through the restructured data (\link{lfqFitCurves}). K-Scan is a method used to search for the K
-   parameter with the best fit while keeping the Linf fixed. In contrast, with response surface analysis
+This functions allows to perform the K-Scan and Response surface
+   analysis to estimate growth parameters.
+   It combines the step of restructuring length-frequency data
+   (\link{lfqRestructure}) followed by the fitting of VBGF
+   curves through the restructured data (\link{lfqFitCurves}). K-Scan is a
+   method used to search for the K
+   parameter with the best fit while keeping the Linf fixed. In contrast,
+   with response surface analysis
    both parameters are estimated and the fits are displayed in a heatmap.
+   Both methods use \code{\link[stats]{optimise}} to find the best \code{t_anchor} value
+   for each combination of \code{K} and \code{Linf}. To find out more about
+   \code{t_anchor}, please refer to the Details description of
+   \code{\link{lfqFitCurves}}. The score value \code{Rn_max} is not comparable with
+   the score value of the other ELEFAN functions (\code{\link{ELEFAN_SA}} or
+   \code{\link{ELEFAN_GA}}).
 }
 \examples{
-data(trout)
+\donttest{
+data(synLFQ4)
 
 # K-Scan
-ELEFAN(trout, Linf_fix = 16)
+output <- ELEFAN(x = synLFQ4, Linf_fix = 80,
+   K_range = seq(0.3,0.7,0.1),C = 0.75, WP = 0.5, MA = 11)
+plot(output)
 
 # Surface response analysis
-ELEFAN(trout, K_range = seq(0.1,2,0.1), Linf_range = seq(12,17,1))
-
-# ELEFAN(trout) # default settings using fine-resolution intervals
+output2 <- ELEFAN(synLFQ4, Linf_range = seq(78,82,1),
+   K_range = seq(0.3,0.7,0.1),C = 0.75, WP = 0.5, MA = 11)
+plot(output2)
+}
 
 }
 \references{
