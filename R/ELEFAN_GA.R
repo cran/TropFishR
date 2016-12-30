@@ -63,6 +63,7 @@
 #' ELEFAN in TRUE. Default:TRUE
 #' @param plot logical; Plot restructured counts with fitted lines using
 #' \code{\link{plot.lfq}} and \code{\link{lfqFitCurves}} (default : FALSE).
+#' @param plot.score logical; Plot genetic algorithm fitness progression
 #' @param ... additional parameters to pass to \code{\link[GA]{ga}}
 #'
 #'
@@ -94,9 +95,11 @@
 #'        \item \strong{C}: amplitude of growth oscillation
 #'          (if \code{seasonalised} = TRUE),
 #'        \item \strong{ts}: summer point of oscillation (ts = WP - 0.5)
-#'          (if \code{seasonalised} = TRUE);
+#'          (if \code{seasonalised} = TRUE),
+#'        \item \strong{phiL}: growth performance index defined as
+#'          phiL = log10(K) + 2 * log10(Linf);
 #'      }
-#'   \item \strong{fitnessValue}: score value, highest value of fitness function.
+#'   \item \strong{Rn_max}: highest value of fitness function, (comparable with ELEFAN and ELEFAN_SA).
 #' }
 #'
 #' @examples
@@ -113,14 +116,14 @@
 #'    MA = 11, plot = TRUE, seed = 1111)
 #' output$par
 #' output$ASP
-#' output$fitnessValue
+#' output$Rn_max
 #'
-#' # compare fitness score (ESP) to
+#' # compare fitness score (fESP) to
 #' # that calculated with "true" growth parameter values
 #' plot(output, draw = FALSE)
 #' lfqFitCurves(output, par=list(Linf=80, K=0.5, t_anchor=0.25, C=0.75, ts=0),
-#'        draw = TRUE, col=1, flagging.out = FALSE)$ESP
-#' lfqFitCurves(output, par=output$par, draw = TRUE, col=2, flagging.out = FALSE)$ESP
+#'        draw = TRUE, col=1, flagging.out = FALSE)$fESP
+#' lfqFitCurves(output, par=output$par, draw = TRUE, col=2, flagging.out = FALSE)$fESP
 #' legend("top", legend=c("orig.", "GA"), lty=2, col=1:2, ncol=2)
 #'}
 #'
@@ -158,6 +161,7 @@ ELEFAN_GA <- function(
   agemax = NULL,
   flagging.out = TRUE,
   plot = FALSE,
+  plot.score = TRUE,
   ...
 ){
 
@@ -218,14 +222,14 @@ ELEFAN_GA <- function(
     Lt <- lfqFitCurves(lfq,
                        par=list(Linf=par[1], K=par[2], t_anchor=par[3], C=par[4], ts=par[5]),
                        agemax = agemax, flagging.out = flagging.out)
-    return(Lt$ESP)
+    return(Lt$fESP)
   }
   # non-seasonalised fitness function
   fun <- function(lfq, par, agemax, flagging.out){
     Lt <- lfqFitCurves(lfq,
                        par=list(Linf=par[1], K=par[2], t_anchor=par[3], C = 0, ts = 0),
                        agemax = agemax, flagging.out = flagging.out)
-    return(Lt$ESP)
+    return(Lt$fESP)
   }
 
 
@@ -253,7 +257,8 @@ ELEFAN_GA <- function(
 
     fit <- GA::ga(
       type = "real-valued",
-      fitness = fun, lfq=lfq,
+      fitness = fun,
+      lfq=lfq,
       min = min,
       max = max,
       agemax = agemax,
@@ -267,14 +272,28 @@ ELEFAN_GA <- function(
   }
 
   # Fitness graph
-  GA::plot(fit)
+  if(plot.score){
+    GA::plot(fit)
+  }
 
   # notify completion
   beepr::beep(10); beepr::beep(1)
 
+  final_res <- lfqFitCurves(lfq = lfq, par=pars,
+                            flagging.out = flagging.out,
+                            agemax = agemax)
+
+  # growth performance index
+  phiL <- log10(pars$K) + 2 * log10(pars$Linf)
+  pars$phiL <- phiL
+
   # Results
-  ret <- c(lfq, list(agemax = agemax,
-                     par = pars, fitnessValue = fit@fitnessValue))
+  ret <- c(lfq, list(ncohort = final_res$ncohort,
+                     agemax = final_res$agemax,
+                     par = pars,
+                     #fitnessValue = fit@fitnessValue,
+                     Rn_max = fit@fitnessValue))
+
   class(ret) <- "lfq"
   if(plot){
     plot(ret, Fname = "rcounts")

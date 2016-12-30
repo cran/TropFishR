@@ -6,8 +6,8 @@
 \usage{
 predict_mod(param, type, FM_change = NA, E_change = NA, Lc_change = NULL,
   tc_change = NULL, s_list = NA, stock_size_1 = NA, age_unit = "year",
-  curr.E = NA, curr.Lc_tc = NA, plus_group = NA, Lmin = NA,
-  Lincr = NA, plot = FALSE)
+  curr.E = NA, curr.Lc = NA, plus_group = NA, Lmin = NA, Lincr = NA,
+  plot = FALSE, hide.progressbar = FALSE)
 }
 \arguments{
 \item{param}{a list consisting of following parameters (not all are required):
@@ -51,7 +51,7 @@ relative to a stock size of 1000 individuals}
 
 \item{curr.E}{current exploitation rate if available}
 
-\item{curr.Lc_tc}{current Lc (length at first capture) if available}
+\item{curr.Lc}{current Lc (length at first capture) if available}
 
 \item{plus_group}{if a value is provided, a plus group is created comprising this
 size class and all above}
@@ -64,6 +64,8 @@ selection ogive. The smaller the higher the resolution but the slower the model
 run. Not required for "knife_edge" selection type}
 
 \item{plot}{logical; if TRUE results are displayed graphically}
+
+\item{hide.progressbar}{logical; should progressbar be displayed or hidden? (Default: FALSE)}
 }
 \value{
 A list with the input parameters and dependent on the model type following
@@ -108,7 +110,7 @@ A list with the input parameters and dependent on the model type following
      \item \strong{totY}: total yield values for different x factors,
      \item \strong{totV}: total values for different x factors,
      \item \strong{meanB}: average biomasses for different x factors,
-     \item \strong{Xfact}: fishing mortality changes;
+     \item \strong{F_change}: fishing mortality changes;
   }
   \item \code{type = 'ThomBell'} and \code{Lc_change} provided
   \itemize{
@@ -152,6 +154,10 @@ The Thompson and Bell model incorporates an iteration step simulating the
    over a wide range of fishing mortalities or exploitation values,
    respectively, is also said to be untrue. By default, the functions assume
    knife-edge recruitment and selection of gears (Sparre and Venema, 1998).
+   If E_change instead of FM_change is used the range is cut at E=0.9, because
+   higher values of E correspond to unrealistic high values of fishing mortality.
+   If no selectivity information is given (by use of s_list), knife edge selectivity
+   with L50 equal to the first argument of Lc_change is assumed.
 }
 \examples{
 #______________________________________
@@ -184,17 +190,16 @@ plot(output)
 
 data(hake)
 hake$Lr <- 35
-select.list <- list(selecType = 'trawl_ogive', L50 = 20, L75 = 24)
-output <- predict_mod(param = hake, E_change = seq(0,1,0.05),
-                      Lc_change = seq(5,80,1), s_list = select.list,
-                      type = 'ypr', plot = FALSE)
-plot(output, type = "Isopleth", xaxis1 = "E", yaxis1 = "Y_R.rel", identify = FALSE)
+select.list <- list(selecType = 'trawl_ogive', L50 = 50, L75 = 54)
+output <- predict_mod(param = hake, FM_change = seq(0,3,0.05),
+                      Lc_change = seq(30,70,1), s_list = select.list,
+                      type = 'ypr', plot = FALSE, curr.Lc = 50, curr.E = 0.73)
+plot(output, type = "Isopleth", xaxis1 = "FM", yaxis1 = "Y_R.rel", mark = TRUE)
 
-select.list <- list(selecType = 'knife_edge', L50 = 20, L75 = 24)
-output <- predict_mod(param = hake, FM_change = seq(0,3,0.01),
-                      Lc_change = seq(5,80,1), s_list = select.list,
+output <- predict_mod(param = hake, E_change = seq(0,1,0.1),
+                      Lc_change = seq(2,120,2), #s_list = select.list,
                       type = 'ypr', plot = FALSE)
-plot(output, type = "Isopleth", xaxis1 = "E", yaxis1 = "B_R.rel")
+plot(output, type = "Isopleth", xaxis1 = "E", yaxis1 = "B_R")
 
 #______________________________________
 #      Thompson and Bell model
@@ -202,25 +207,25 @@ plot(output, type = "Isopleth", xaxis1 = "E", yaxis1 = "B_R.rel")
 # with age structured data
 data(shrimps)
 
-output <- predict_mod(param = shrimps, FM_change = seq(0.1,3,0.1),
+output <- predict_mod(param = shrimps, FM_change = seq(0.1,20,0.1),
      type = "ThompBell", age_unit = "month", plot = TRUE)
-
-# create list with selectivity information
-select.list <- list(selecType = 'trawl_ogive',
-   L50 = 34, L75 = 36)
-
-# add additional parameters to data list
-shrimps <- c(shrimps,  list(Linf = 50, K = 0.3, t0 = 0.01))
-
-output <- predict_mod(param = shrimps, E_change = seq(0,1,0.01),
-   Lc_change = seq(10,44,2),
-   type = 'ThompBell', s_list = select.list,  age_unit = 'month')
-plot(output, xaxis = "E")
 
 #______________________________________
 # with length structured data
 data(hake)
-predict_mod(hake,FM_change = seq(0.1,3,0.1), type = 'ThompBell', plot = TRUE)
+par(mar = c(5, 4, 4, 7))
+predict_mod(param = hake,FM_change = seq(0.1,3,0.05),
+     type = 'ThompBell', plot = TRUE)
+
+# create list with selectivity information
+select.list <- list(selecType = 'trawl_ogive', L50 = 50, L75 = 55)
+
+output <- predict_mod(param = hake, FM_change = seq(0,2,0.1),
+     Lc_change = seq(20,70,1),
+     curr.E = 0.4, curr.Lc = 50,
+     type = 'ThompBell', s_list = select.list)
+plot(output, xaxis1 = "FM", yaxis_iso = "Lc", yaxis1 = "B_R", mark = TRUE)
+
 
 }
 \references{

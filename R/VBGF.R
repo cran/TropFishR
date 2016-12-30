@@ -22,35 +22,33 @@
 #' @keywords function growth VBGF
 #'
 #' @examples
-#' \dontrun{
 #' # calculation of lengths
 #' # with t0
 #' t <- seq(0,6,0.1)
-#' Lt <- VBGF(Linf=80, K=0.6, t=t, t0=-0.1)
+#' Lt <- VBGF(list(Linf=80, K=0.6, t0=-0.1),t=t)
 #' plot(t, Lt, t="l")
 #'
 #' # with L0
 #' t <- seq(0,6,0.1)
-#' Lt <- VBGF(Linf=80, K=0.6, t=t, L0=2)
+#' Lt <- VBGF(list(Linf=80, K=0.6, L0=2),t=t)
 #' plot(t, Lt, t="l")
 #'
 #' # with Winf
 #' t <- seq(0,6,0.1)
-#' Wt <- VBGF(Winf=4000, K=0.8, t=t)
+#' Wt <- VBGF(list(Winf=4000, K=0.8), t=t)
 #' plot(t, Wt, t="l")
 #'
 #' # seasonalised VBGF
 #' t <- seq(0,6,0.1)
-#' Lt <- VBGF(Linf=80, K=0.6, t=t, t0=-0.1, ts=0.5, C=0.75)
+#' Lt <- VBGF(list(Linf=80, K=0.6, t0=-0.1, ts=0.5, C=0.75),t=t)
 #' plot(t, Lt, t="l")
 #'
 #'
 #' # calculation of ages
 #' L <- seq(2,200,0.1)
-#' t <- VBGF(L = L, Linf=210, K=0.8, C= 0.75)
+#' t <- VBGF(L = L, list(Linf=210, K=0.8, C= 0.75))
 #' plot(t, L, t="l")
 #'
-#'}
 #' @details
 #' Based upon which input parameters are given one of the following
 #' VBGF types is applied: "special", "generalised", or "seasonalised" VBGF.
@@ -88,7 +86,8 @@ VBGF <- function(param, t = NA, L = NA){
 
   if(is.na(L0)){
     # generalised seasonalised VBGF for length
-    if(is.na(Winf) & is.na(L[1])) res <- Linf * (1 - exp(-K * D * (t - t0) + (((C*K*D)/(2*pi)) * sin(2*pi*(t-ts))) - (((C*K*D)/(2*pi)) * sin(2*pi*(t0-ts))))) ^ (1/D)
+    if((is.na(Winf) & is.na(L[1])) |
+       (!is.na(Winf) & !is.na(Linf) & is.na(L[1]))) res <- Linf * (1 - exp(-K * D * (t - t0) + (((C*K*D)/(2*pi)) * sin(2*pi*(t-ts))) - (((C*K*D)/(2*pi)) * sin(2*pi*(t0-ts))))) ^ (1/D)
 
     # OLD:
     # res <- Linf * (1 - exp(-K * D * (t - t0) -
@@ -97,7 +96,8 @@ VBGF <- function(param, t = NA, L = NA){
     #                                          (sin(2*pi*(t0-ts))))))^ (1/D)
 
 
-    if(is.na(Winf) & is.na(t[1])){
+    if((is.na(Winf) & is.na(t[1])) |
+       (!is.na(Winf) & !is.na(Linf) & is.na(t[1]))){
       if(D == 1 & C == 0) res <- t0 - (log(1-L/Linf)/K)
       # lookup table for soVBGF
       if(D != 1 | C != 0){

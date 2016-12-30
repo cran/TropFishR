@@ -59,6 +59,7 @@
 #' @param flagging.out logical; passed to \link{lfqFitCurves}. Default is TRUE
 #' @param plot logical; Plot restructured counts with fitted lines using
 #' \code{\link{plot.lfq}} and \code{\link{lfqFitCurves}} (default : FALSE).
+#' @param plot.score logical; Plot simulated annealing score progression.
 #'
 #' @examples
 #' \donttest{
@@ -71,7 +72,7 @@
 #'   low_par = list(Linf = 70, K = 0.3, t_anchor = 0, C = 0, ts = 0),
 #'   up_par = list(Linf = 90, K = 0.7, t_anchor = 1, C = 1, ts = 1))
 #' output$par
-#' output$cost_value
+#' output$Rn_max
 #'
 #' # view fit
 #' plot(output)
@@ -83,8 +84,8 @@
 #' # compare to original parameters
 #' tmp <- lfqFitCurves(output, col=4, lty=1,
 #'    par=list(Linf=80, K=0.5, t_anchor=0.25, C=0.75, ts=0), draw=TRUE)
-#' tmp$ESP
-#' output$cost_value
+#' tmp$fESP
+#' output$Rn_max
 #' }
 #'
 #' @details A more detailed description of the simulated annealing (SA) can be found in
@@ -111,9 +112,12 @@
 #'        \item \strong{C}: amplitude of growth oscillation
 #'          (if \code{seasonalised} = TRUE),
 #'        \item \strong{ts}: summer point of oscillation (ts = WP - 0.5)
-#'          (if \code{seasonalised} = TRUE);
+#'          (if \code{seasonalised} = TRUE),
+#'        \item \strong{phiL}: growth performance index defined as
+#'          phiL = log10(K) + 2 * log10(Linf);
 #'      }
-#'   \item \strong{cost_value}: score value, lowest value of cost function.
+#'   \item \strong{Rn_max}:  highest score value (absolute value of cost function,
+#'   comparable with ELEFAN and ELEFAN_GA).
 #' }
 #'
 #' @importFrom graphics par plot title lines grid
@@ -144,7 +148,8 @@ ELEFAN_SA <- function(x,
                       MA = 5, addl.sqrt = FALSE,
                       agemax = NULL,
                       flagging.out = TRUE,
-                      plot = FALSE){
+                      plot = FALSE,
+                      plot.score = TRUE){
 
   res <- x
   classes <- res$midLengths
@@ -228,7 +233,7 @@ ELEFAN_SA <- function(x,
     Lt <- lfqFitCurves(lfq,
                  par=list(Linf=par[1], K=par[2], t_anchor=par[3], C=par[4], ts=par[5]),
                  flagging.out = flagging.out, agemax = agemax)
-    return(-Lt$ESP)
+    return(-Lt$fESP)
   }
   # cost function
   SAfun <- function(lfq, par=c(init_Linf, init_K, init_tanc),
@@ -236,7 +241,7 @@ ELEFAN_SA <- function(x,
     Lt <- lfqFitCurves(lfq,
                  par=list(Linf=par[1], K=par[2], t_anchor=par[3], C = 0, ts = 0),
                  flagging.out = flagging.out, agemax = agemax)
-    return(-Lt$ESP)
+    return(-Lt$fESP)
   }
 
   if(seasonalised){
@@ -285,26 +290,28 @@ ELEFAN_SA <- function(x,
   medi <- aggregate(tmp$function.value, list(step = tmp$nb.steps),median, na.rm = TRUE)
   ylim <- c(min(range(exe$x,na.rm = TRUE, finite = TRUE)),
             max(range(meani$x, na.rm = TRUE, finite = TRUE)))
-  op <- par(mar=c(5.1, 4.1, 1, 4.1))
-  plot(tmp$nb.steps, tmp$function.value, type = "n", ylim = ylim, xlab = "Iteration",
-       ylab = "Cost value")
-  graphics::grid(equilogs = FALSE)
-  points(tmp$nb.steps, tmp$current.minimum, type = "o", pch = 16, lty = 1,
-         col = "green3", cex = 0.7)
-  points(meani$step, meani$x, type = "o", pch = 1, lty = 2,
-         col = "dodgerblue3", cex = 0.7)
-  polygon(c(meani$step, rev(meani$step)),
-          c(exe$x, rev(medi$x)),
-          border = FALSE, col = adjustcolor("green3", alpha.f = 0.1))
-  par(new=TRUE)
-  plot(tmp$nb.steps, tmp$temperature, t="l", col=2, lty=2, log="y", axes = FALSE, xlab = "", ylab = "")
-  axis(4, col=2, col.axis=2); mtext(text = "Temperature", side = 4, line = par()$mgp[1], col=2)
-  legend("topright", legend = c("Best", "Mean", "Median", "Temperature"),
-         col = c("green3", "dodgerblue3", adjustcolor("green3", alpha.f = 0.1), 2),
-         pch = c(16, 1, NA, NA), lty = c(1,2,1,2),
-         lwd = c(1, 1, 10, 1), pt.cex = c(rep(0.7,2), 2, NA),
-         inset = 0.02)
-  par(op)
+  if(plot.score){
+      op <- par(mar=c(5.1, 4.1, 1, 4.1))
+    plot(tmp$nb.steps, tmp$function.value, type = "n", ylim = ylim, xlab = "Iteration",
+         ylab = "Cost value")
+    graphics::grid(equilogs = FALSE)
+    points(tmp$nb.steps, tmp$current.minimum, type = "o", pch = 16, lty = 1,
+           col = "green3", cex = 0.7)
+    points(meani$step, meani$x, type = "o", pch = 1, lty = 2,
+           col = "dodgerblue3", cex = 0.7)
+    polygon(c(meani$step, rev(meani$step)),
+            c(exe$x, rev(medi$x)),
+            border = FALSE, col = adjustcolor("green3", alpha.f = 0.1))
+    par(new=TRUE)
+    plot(tmp$nb.steps, tmp$temperature, t="l", col=2, lty=2, log="y", axes = FALSE, xlab = "", ylab = "")
+    axis(4, col=2, col.axis=2); mtext(text = "Temperature", side = 4, line = par()$mgp[1], col=2)
+    legend("topright", legend = c("Best", "Mean", "Median", "Temperature"),
+           col = c("green3", "dodgerblue3", adjustcolor("green3", alpha.f = 0.1), 2),
+           pch = c(16, 1, NA, NA), lty = c(1,2,1,2),
+           lwd = c(1, 1, 10, 1), pt.cex = c(rep(0.7,2), 2, NA),
+           inset = 0.02)
+    par(op)
+  }
 
   # notify completion
   beepr::beep(10); beepr::beep(1) # beepr::beep(2)
@@ -313,11 +320,16 @@ ELEFAN_SA <- function(x,
   final_res <- lfqFitCurves(lfq = res,par=pars,flagging.out = flagging.out,
                             agemax = agemax)
 
+  # growth performance index
+  phiL <- log10(pars$K) + 2 * log10(pars$Linf)
+  pars$phiL <- phiL
+
   # Results
   ret <- c(res, list(ncohort = final_res$ncohort,
                      agemax = final_res$agemax,
                      par = pars,
-                     cost_value = SAfit$value))
+                     #cost_value = SAfit$value,
+                     Rn_max = abs(SAfit$value)))
   class(ret) <- "lfq"
   if(plot){
     plot(ret, Fname = "rcounts")

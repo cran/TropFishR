@@ -132,7 +132,7 @@ lfqFitCurves <- function(lfq,
 
 
   par2 <- par
-  t <- yeardec
+  t <- c(yeardec,max(yeardec)+0.2)  # for plotting, otherwise growth curves are cut at last sampling time
   Lt <- vector(mode="list", ncohort)
   for(ct in seq(ncohort)){
     par2$t_anchor <- tAs[ct]
@@ -191,12 +191,14 @@ lfqFitCurves <- function(lfq,
 
   ESP <- sum(grd$Fs * grd$hit, na.rm = TRUE)
   fASP <- ESP/lfq$ASP
-  fESP <- round((10^(ESP/lfq$ASP)) /10, digits = 3)
+  fESP <- (10^(ESP/lfq$ASP)) /10
 
-  ret <- c(lfq, list(Lt = Lt,
-                     agemax = agemax,
-                     ncohort = ncohort,
-                     ASP = lfq$ASP, ESP = ESP,
-                     fASP = fASP, fESP = fESP))
-  return(ret)
+  lfq$Lt <- Lt
+  lfq$agemax <- agemax
+  lfq$ncohort <- ncohort
+  lfq$ESP <- ESP
+  lfq$fASP <- fASP
+  lfq$fESP <- fESP
+
+  return(lfq)
 }

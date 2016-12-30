@@ -18,6 +18,7 @@
 #' @param reg_int instead of using the identity method a range can be determined,
 #'    which is to be used for the regression analysis. If equal to NULL identity method
 #'    is applied (default).
+#' @param main title of plot (Default is "Powell-Wetherall plot")
 #'
 #' @keywords function mortality Z/K Linf
 #'
@@ -25,6 +26,9 @@
 #' \donttest{
 #' data(synLFQ3)
 #' powell_wetherall(synLFQ3)
+#'
+#' data(synLFQ5)
+#' powell_wetherall(synLFQ5, catch_columns = 1:12)
 #' }
 #'
 #' @details  The first length group or age class within the list object \code{midLengths} or
@@ -72,7 +76,8 @@
 #' @export
 
 powell_wetherall <- function(param, catch_columns = NA,
-                             savePlots = FALSE, reg_int = NULL){
+                             savePlots = FALSE, reg_int = NULL,
+                             main = "Powell-Wetherall plot"){
 
   res <- param
   catch <- res$catch
@@ -130,7 +135,7 @@ powell_wetherall <- function(param, catch_columns = NA,
     #identify plot
     if(is.null(reg_int)){
       repeat{
-        dev.new(noRStudioGD = TRUE)
+        dev.new()#noRStudioGD = TRUE)
         plot(x = Lprime,y = Lmean_Lprime,
              xlab = "Lprime", ylab = "Lmean - Lprime")
         text(Lprime+0.5, Lmean_Lprime+0.5, labels=as.character(order(Lprime)), cex= 0.7)
@@ -197,7 +202,7 @@ powell_wetherall <- function(param, catch_columns = NA,
     #final plot
     plot(x = Lprime,y = Lmean_Lprime,
          xlab = "Lprime", ylab = "Lmean - Lprime",
-         cex = 1.5, main = "Powell-Wetherall plot")
+         cex = 1.5, main = main)
     par(new=T)
     points(x = df.BH.cut$Lprime,y = df.BH.cut$Lmean_Lprime,
            pch = 19, col = 'blue', cex = 1.5)

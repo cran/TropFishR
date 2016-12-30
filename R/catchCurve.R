@@ -62,6 +62,10 @@
 #' summary(output$linear_mod_sel)
 #'  }
 #'
+#' # the same with predefined selection for regression line:
+#' output <- catchCurve(synLFQ3, calc_ogive = TRUE, reg_int = c(9,21))
+#' plot(output, plot_selec = TRUE)
+#'
 #' @details This function includes the \link{identify} function, which asks you to
 #'   choose two points from a graph manually. The two points which you choose by clicking
 #'   on the plot in the graphical device represent the start and end of the data points,
@@ -334,25 +338,30 @@ catchCurve <- function(param, catch_columns = NA, cumulative = FALSE,
   }
 
   #for plot
-  minY <- ifelse(min(yvar,na.rm=TRUE) < 0, min(yvar,na.rm=TRUE),0)
+  #minY <- ifelse(min(yvar,na.rm=TRUE) < 0, min(yvar,na.rm=TRUE),0)
+  minY <- min(yvar,na.rm=TRUE)
   maxY <- max(yvar,na.rm=TRUE) + 1
+  xlims <- c(0, max(xvar,na.rm=TRUE))
 
   #identify plot
   if(is.null(reg_int)){
     writeLines("Please choose the minimum and maximum point in the graph \nto include for the regression line!")
-    dev.new(noRStudioGD = TRUE)
+    dev.new()#noRStudioGD = TRUE)
     op <- par(mfrow = c(1,1),
               c(5, 4, 4, 2) + 0.1,
               oma = c(2, 1, 0, 1) + 0.1)
-    plot(x = xvar,y = yvar, ylim = c(minY,maxY),
-         xlab = xlabel, ylab = ylabel)
-    text(xvar+0.5, yvar+0.5, labels=as.character(order(xvar)), cex= 0.7)
+    plot(x = xvar,y = yvar, ylim = c(minY,maxY), xlim = xlims,
+         xlab = xlabel, ylab = ylabel, type = "n")
+    text(xvar, yvar, labels=as.character(order(xvar)), cex= 0.7)
     cutter <- identify(x = xvar, y = yvar,
                        labels = order(xvar), n=2)
     par(op)
 
     if(is.na(cutter[1]) | is.nan(cutter[1]) |
        is.na(cutter[2]) | is.nan(cutter[2]) ) stop(noquote("You did not choose any points in the graph. Please re-run the function and choose points in the graph!"))
+
+    dev.off()
+
   }
   if(!is.null(reg_int)){
     cutter <- reg_int
@@ -415,6 +424,10 @@ catchCurve <- function(param, catch_columns = NA, cumulative = FALSE,
 
     # dependent vairable in following regression analysis
     ln_1_S_1 <- log((1/Sobs) - 1)
+
+    # get rid of Inf
+    ln_1_S_1[which(ln_1_S_1 == Inf)] <- NA
+    t_ogive[which(t_ogive == Inf)] <- NA
 
     #regression analysis to caluclate T1 and T2
     mod_ogive <- lm(ln_1_S_1 ~ t_ogive, na.action = na.omit)

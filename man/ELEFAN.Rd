@@ -5,9 +5,9 @@
 \title{ELEFAN}
 \usage{
 ELEFAN(x, Linf_fix = NA, Linf_range = NA, K_range = exp(seq(log(0.1),
-  log(10), length.out = 100)), C = 0, WP = 0, MA = 5, addl.sqrt = FALSE,
+  log(10), length.out = 100)), C = 0, ts = 0, MA = 5, addl.sqrt = FALSE,
   agemax = NULL, flagging.out = TRUE, hide.progressbar = FALSE,
-  plot = FALSE)
+  plot = FALSE, contour = FALSE, plot_title = TRUE)
 }
 \arguments{
 \item{x}{a list consisting of following parameters:
@@ -30,7 +30,7 @@ calculated
 
 \item{C}{growth oscillation amplitude (default: 0)}
 
-\item{WP}{onset of the first oscillation relative to t0 (winter point, default: 0)}
+\item{ts}{onset of the first oscillation relative to t0 (summer point, default: 0)}
 
 \item{MA}{number indicating over how many length classes the moving average
 should be performed (defalut: 5, for
@@ -47,6 +47,13 @@ more information see \link{lfqRestructure}).}
 
 \item{plot}{logical; indicating if plot with restructured frequencies and growth curves should
 be displayed}
+
+\item{contour}{if used in combination with response surface analysis, contour lines
+are displayed rather than the score as text in each field of the score plot. Usage
+can be logical (e.g. TRUE) or by providing a numeric which indicates the
+number of levels (\code{nlevels} in \code{\link{contour}}). By default FALSE.}
+
+\item{plot_title}{logical; indicating whether title to score plots should be displayed}
 }
 \value{
 A list with the input parameters and following list objects:
@@ -71,7 +78,9 @@ A list with the input parameters and following list objects:
        \item \strong{C}: amplitude of growth oscillation
          (if \code{seasonalised} = TRUE),
        \item \strong{ts}: summer point of oscillation (ts = WP - 0.5)
-         (if \code{seasonalised} = TRUE);
+         (if \code{seasonalised} = TRUE),
+       \item \strong{phiL}: growth performance index defined as
+         phiL = log10(K) + 2 * log10(Linf);
      }
   \item \strong{Rn_max}: highest score value
 }
@@ -102,12 +111,12 @@ data(synLFQ4)
 
 # K-Scan
 output <- ELEFAN(x = synLFQ4, Linf_fix = 80,
-   K_range = seq(0.3,0.7,0.1),C = 0.75, WP = 0.5, MA = 11)
+   K_range = seq(0.3,0.7,0.1),C = 0.75, ts = 0.5, MA = 11)
 plot(output)
 
 # Surface response analysis
 output2 <- ELEFAN(synLFQ4, Linf_range = seq(78,82,1),
-   K_range = seq(0.3,0.7,0.1),C = 0.75, WP = 0.5, MA = 11)
+   K_range = seq(0.3,0.7,0.1),C = 0.75, ts = 0.5, MA = 11, contour = 3)
 plot(output2)
 }
 

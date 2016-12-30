@@ -1,9 +1,6 @@
 TropFishR
 =====
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/TropFishR)](https://cran.r-project.org/package=TropFishR)  [![](http://cranlogs.r-pkg.org/badges/grand-total/TropFishR)](https://cran.r-project.org/package=TropFishR)
-
-
 TropFishR is a collection of fisheries models based on the FAO Manual "Introduction to tropical fish stock assessment" by Sparre and Venema (1998, 1999). Not only scientists working in the tropics will benefit from this new toolbox. The methods work with age based or length-frequency data and assist in the assessment of data poor fish stocks. Overall, the package comes with 30 functions, 19 data sets and 10 s3 methods. All objects are documented and provide examples that allow reproducing the examples from the FAO manual. 
 
 

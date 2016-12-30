@@ -8,7 +8,7 @@ ELEFAN_GA(x, seasonalised = FALSE, low_par = NULL, up_par = NULL,
   popSize = 50, maxiter = 100, run = maxiter, parallel = FALSE,
   pmutation = 0.1, pcrossover = 0.8, elitism = base::max(1, round(popSize
   * 0.05)), MA = 5, addl.sqrt = FALSE, agemax = NULL,
-  flagging.out = TRUE, plot = FALSE, ...)
+  flagging.out = TRUE, plot = FALSE, plot.score = TRUE, ...)
 }
 \arguments{
 \item{x}{a list consisting of following parameters:
@@ -87,6 +87,8 @@ ELEFAN in TRUE. Default:TRUE}
 \item{plot}{logical; Plot restructured counts with fitted lines using
 \code{\link{plot.lfq}} and \code{\link{lfqFitCurves}} (default : FALSE).}
 
+\item{plot.score}{logical; Plot genetic algorithm fitness progression}
+
 \item{...}{additional parameters to pass to \code{\link[GA]{ga}}}
 }
 \value{
@@ -113,9 +115,11 @@ A list with the input parameters and following list objects:
        \item \strong{C}: amplitude of growth oscillation
          (if \code{seasonalised} = TRUE),
        \item \strong{ts}: summer point of oscillation (ts = WP - 0.5)
-         (if \code{seasonalised} = TRUE);
+         (if \code{seasonalised} = TRUE),
+       \item \strong{phiL}: growth performance index defined as
+         phiL = log10(K) + 2 * log10(Linf);
      }
-  \item \strong{fitnessValue}: score value, highest value of fitness function.
+  \item \strong{Rn_max}: highest value of fitness function, (comparable with ELEFAN and ELEFAN_SA).
 }
 }
 \description{
@@ -142,14 +146,14 @@ output <- ELEFAN_GA(synLFQ4, seasonalised = TRUE,
    MA = 11, plot = TRUE, seed = 1111)
 output$par
 output$ASP
-output$fitnessValue
+output$Rn_max
 
-# compare fitness score (ESP) to
+# compare fitness score (fESP) to
 # that calculated with "true" growth parameter values
 plot(output, draw = FALSE)
 lfqFitCurves(output, par=list(Linf=80, K=0.5, t_anchor=0.25, C=0.75, ts=0),
-       draw = TRUE, col=1, flagging.out = FALSE)$ESP
-lfqFitCurves(output, par=output$par, draw = TRUE, col=2, flagging.out = FALSE)$ESP
+       draw = TRUE, col=1, flagging.out = FALSE)$fESP
+lfqFitCurves(output, par=output$par, draw = TRUE, col=2, flagging.out = FALSE)$fESP
 legend("top", legend=c("orig.", "GA"), lty=2, col=1:2, ncol=2)
 }
 
