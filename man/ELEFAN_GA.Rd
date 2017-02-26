@@ -8,7 +8,7 @@ ELEFAN_GA(x, seasonalised = FALSE, low_par = NULL, up_par = NULL,
   popSize = 50, maxiter = 100, run = maxiter, parallel = FALSE,
   pmutation = 0.1, pcrossover = 0.8, elitism = base::max(1, round(popSize
   * 0.05)), MA = 5, addl.sqrt = FALSE, agemax = NULL,
-  flagging.out = TRUE, plot = FALSE, plot.score = TRUE, ...)
+  flagging.out = TRUE, seed = 1, plot = FALSE, plot.score = TRUE, ...)
 }
 \arguments{
 \item{x}{a list consisting of following parameters:
@@ -84,6 +84,10 @@ according to Brey et al. (1988) (default: FALSE, for
 \item{flagging.out}{logical; should positive peaks be flagged out? Original setting of
 ELEFAN in TRUE. Default:TRUE}
 
+\item{seed}{an integer value containing the random number generator state. This
+argument can be used to replicate the results of a GA search. Note that
+if parallel computing is required, the doRNG package must be installed.}
+
 \item{plot}{logical; Plot restructured counts with fitted lines using
 \code{\link{plot.lfq}} and \code{\link{lfqFitCurves}} (default : FALSE).}
 
@@ -139,6 +143,9 @@ data(synLFQ4)
 plot(synLFQ4, Fname="catch")
 
 # Genetic algorithm
+# (if using a multicore processor,
+#   consider adding the argument 'parallel=TRUE'
+#   to reduce computation time)
 output <- ELEFAN_GA(synLFQ4, seasonalised = TRUE,
    low_par = list(Linf = 70, K = 0.25, t_anchor = 0, C = 0, ts= 0),
    up_par = list(Linf = 90, K = 0.7, t_anchor = 1, C = 1, ts = 1),

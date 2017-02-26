@@ -4,8 +4,9 @@
 \alias{lfqCreate}
 \title{Create lfq data from length measurements}
 \usage{
-lfqCreate(data, Lname, Dname, bin_size = 2, length_unit = "cm",
-  plus_group = FALSE, aggregate_dates = FALSE, plot = FALSE)
+lfqCreate(data, Lname, Dname, Fname = NA, bin_size = 2,
+  length_unit = "cm", plus_group = FALSE, aggregate_dates = FALSE,
+  plot = FALSE)
 }
 \arguments{
 \item{data}{data with at least two columns, one with the length measurements, one
@@ -15,12 +16,17 @@ with the sampling date}
 
 \item{Dname}{name of the date column}
 
+\item{Fname}{optional; name of column with frequency, in case each length was measured more than
+one time}
+
 \item{bin_size}{size of the bins in cm (Default: 2)}
 
 \item{length_unit}{unit of length measurements, either "cm" (default), "mm" or "m"}
 
 \item{plus_group}{logical; should a plus group be created? If yes you will be
-asked to insert the length for the plus group in the console. (Default: FALSE)}
+asked to insert the length for the plus group in the console (default: FALSE).
+Instead of inserting the length of the plus group via the console, the value
+can be incorporated in a vector, e.g. plus_group = c(TRUE, 30).}
 
 \item{aggregate_dates}{logical; indicating whether dates should be lumped in monthly
 sampling times (assuming sampling always aound the 15th of
@@ -51,7 +57,7 @@ data <- data.frame(length.mm. = sample(c(rpois(300, lambda = 60),
            length.out = 1000))
 # create lfq data
 lfq_dat <- lfqCreate(data,Lname = "length.mm.", Dname = "dates", aggregate_dates = TRUE,
-   length_unit = "mm", bin_size = 0.5, plot=TRUE)
+   length_unit = "mm", bin_size = 0.5, plot=TRUE, plus_group=c(TRUE,15.75))
 
 }
 \keyword{function}

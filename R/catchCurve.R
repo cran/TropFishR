@@ -118,6 +118,7 @@
 #' @importFrom grDevices dev.new
 #' @importFrom graphics identify par plot
 #' @importFrom stats lm na.omit
+#' @importFrom utils flush.console
 #'
 #' @references
 #' Baranov, F.I., 1926. On the question of the dynamics of the fishing industry.
@@ -181,6 +182,7 @@ catchCurve <- function(param, catch_columns = NA, cumulative = FALSE,
   if(is.na(catch_columns[1]) & (class(res$catch) == 'matrix' |
      class(res$catch) == 'data.frame')){
     writeLines("Please be aware that you provided the catch as a matrix without specifiying any columns for \n the analysis. In this case the methods applies by default the catch curve with constant \n parameter system (refer to the help file for more information).")
+    flush.console()
     constant_dt <- TRUE
     catch <- res$catch
   }
@@ -346,12 +348,15 @@ catchCurve <- function(param, catch_columns = NA, cumulative = FALSE,
   #identify plot
   if(is.null(reg_int)){
     writeLines("Please choose the minimum and maximum point in the graph \nto include for the regression line!")
+    flush.console()
     dev.new()#noRStudioGD = TRUE)
     op <- par(mfrow = c(1,1),
               c(5, 4, 4, 2) + 0.1,
               oma = c(2, 1, 0, 1) + 0.1)
     plot(x = xvar,y = yvar, ylim = c(minY,maxY), xlim = xlims,
          xlab = xlabel, ylab = ylabel, type = "n")
+    mtext(side = 3, "Click on two numbers. Escape to Quit.",
+          xpd = NA, cex = 1.25)
     text(xvar, yvar, labels=as.character(order(xvar)), cex= 0.7)
     cutter <- identify(x = xvar, y = yvar,
                        labels = order(xvar), n=2)
@@ -403,6 +408,7 @@ catchCurve <- function(param, catch_columns = NA, cumulative = FALSE,
     se = SE_Z_lm1,
     confidenceInt = conf_Z_lm1
   ))
+  if("M" %in% names(ret)){ret$FM <- ret$Z - ret$M}
   names(ret)[names(ret) == "xvar"] <- xname
   names(ret)[names(ret) == "yvar"] <- yname
   class(ret) <- "catchCurve"
@@ -441,10 +447,12 @@ catchCurve <- function(param, catch_columns = NA, cumulative = FALSE,
     # selection parameters
     t50 <- T1/T2
     t75 <- (T1 + log(3))/T2
+    t95 <-  (T1 - log((1 / 0.95) - 1)) / T2
     if(!is.null(res$Linf) & !is.null(res$K)){
       if(is.null(res$t0)) t0 = 0
       L50 <- Linf*(1-exp(-K*(t50-t0)))
       L75 <- Linf*(1-exp(-K*(t75-t0)))
+      L95 <- Linf*(1-exp(-K*(t95-t0)))
     }
 
     ret2 <- c(ret,list(
@@ -454,11 +462,14 @@ catchCurve <- function(param, catch_columns = NA, cumulative = FALSE,
       ln_1_S_1 = ln_1_S_1,
       Sest = Sest,
       t50 = t50,
-      t75 = t75))
+      t75 = t75,
+      t95 = t95))
     if(exists("L50")) ret2$L50 = L50
     if(exists("L75")) ret2$L75 = L75
+    if(exists("L95")) ret2$L95 = L95
     if(exists("L50")) names(ret2)[which(ret2 %in% L50)] <- "L50"
     if(exists("L75")) names(ret2)[which(ret2 %in% L75)] <- "L75"
+    if(exists("L95")) names(ret2)[which(ret2 %in% L95)] <- "L95"
 
     class(ret2) <- "catchCurve"
     plot(ret2, plot_selec=TRUE)
