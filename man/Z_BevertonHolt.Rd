@@ -4,7 +4,7 @@
 \alias{Z_BevertonHolt}
 \title{Beverton & Holt's Z-Equations}
 \usage{
-Z_BevertonHolt(param, catch_column = NA, Lprime_tprime)
+Z_BevertonHolt(param, catch_columns = NA, Lprime_tprime)
 }
 \arguments{
 \item{param}{a list consisting of following parameters:
@@ -17,8 +17,8 @@ Z_BevertonHolt(param, catch_column = NA, Lprime_tprime)
   \item \code{catch}: catch as vector, or a matrix with catches of subsequent years;
 }}
 
-\item{catch_column}{optional; in case catch is a matrix or data.frame, a number
-indicating which column of the matrix should be analysed (Default: \code{NA}).}
+\item{catch_columns}{optional; in case catch is a matrix or data.frame, a number or vector
+indicating which column(s) of the matrix should be analysed (Default: \code{NA}).}
 
 \item{Lprime_tprime}{length or age prime, above which all fish are under full exploitation as
 mid length or age class.}
@@ -43,11 +43,11 @@ The first length group or age class within the list object \code{midLengths} or
 \examples{
 # based on length-frequency data
 data(synLFQ2)
-Z_BevertonHolt(synLFQ2, catch_column = 2, Lprime_tprime = 47.5)
+Z_BevertonHolt(synLFQ2, catch_columns = 2, Lprime_tprime = 47.5)
 
 # based on age composition data
 data(synCAA1)
-Z_BevertonHolt(synCAA1, catch_column = 3, Lprime_tprime = 2.5)
+Z_BevertonHolt(synCAA1, catch_columns = 3, Lprime_tprime = 2.5)
 
 }
 \references{
@@ -61,4 +61,3 @@ Part 1. Manual. \emph{FAO Fisheries Technical Paper}, (306.1, Rev. 2). 407 p.
 \keyword{Z}
 \keyword{function}
 \keyword{mortality}
-

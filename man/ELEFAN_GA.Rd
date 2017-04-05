@@ -91,7 +91,8 @@ if parallel computing is required, the doRNG package must be installed.}
 \item{plot}{logical; Plot restructured counts with fitted lines using
 \code{\link{plot.lfq}} and \code{\link{lfqFitCurves}} (default : FALSE).}
 
-\item{plot.score}{logical; Plot genetic algorithm fitness progression}
+\item{plot.score}{logical; Plot genetic algorithm fitness progression.
+(Default: plot.score=TRUE)}
 
 \item{...}{additional parameters to pass to \code{\link[GA]{ga}}}
 }
@@ -176,4 +177,3 @@ growth parameters from length-frequency data. \emph{Meeresforschung}, 28(4):205-
 Scrucca, L. (2013). GA: a package for genetic algorithms in R. Journal of
 Statistical Software, 53(4), 1-37.
 }
-

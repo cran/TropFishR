@@ -7,10 +7,12 @@
 #' @param lfq lfq object with dates, midLengths, and catch
 #' @param par growth parameter as resulting from e.g. \code{\link{ELEFAN}}
 #' @param bin_size Bin size for length frequencies (in cm)
-#' @param plus_group logical; should a plus group be created? If yes you will be
+#' @param vectorise_catch logical; indicating if the catch matrix should be summarised to
+#'    yearly vectors (default: FALSE).
+#' @param plus_group logical or numeric; should a plus group be created? If yes you will be
 #'    asked to insert the length for the plus group in the console (default: FALSE).
 #'    Instead of inserting the length of the plus group via the console, the value
-#'    can be incorporated in a vector, e.g. plus_group = c(TRUE, 30).
+#'    can be inserted, e.g. plus_group = 85.5.
 #'
 #' @keywords function lfq length-frequency
 #'
@@ -18,17 +20,20 @@
 #' data(synLFQ4)
 #'
 #' ## summarise catch matrix per year
-#' lfq_sum <- lfqModify(synLFQ4)
+#' lfq_sum <- lfqModify(synLFQ4, vectorise_catch = TRUE)
 #'
 #' ## change bin size
 #' lfq_bin <- lfqModify(synLFQ4, bin_size = 4)
+#'
+#' ## add plus_group
+#' lfq_plus <- lfqModify(synLFQ4, plus_group = 85.5)
 #'
 #' @return lfq object with rearranged catch matrix (yearly sums) and growth parameters
 #'    if provided.
 #'
 #' @export
 
-lfqModify <- function(lfq, par = NULL, bin_size = NA, plus_group = FALSE){
+lfqModify <- function(lfq, par = NULL, bin_size = NA, vectorise_catch = FALSE, plus_group = FALSE){
 
   dates <- lfq$dates
   midLengths <- lfq$midLengths
@@ -43,7 +48,11 @@ lfqModify <- function(lfq, par = NULL, bin_size = NA, plus_group = FALSE){
     for(i in 1:length(unique(dates))){
       sampli <- unique(dates)[i]
       dati <- as.character(unique(dates)[i])
-      lengthi <- rep.int(midLengths,times=as.numeric(catch[,dates == sampli]))
+      if(length(unique(dates)) > 1){
+        lengthi <- rep.int(midLengths,times=as.numeric(catch[,dates == sampli]))
+      }else{
+        lengthi <- rep.int(midLengths,times=as.numeric(catch[dates == sampli]))
+      }
       cuti <- cut(lengthi, breaks = bin.breaks, labels = midLengthsNEW, include.lowest = TRUE)
       freq <- plyr::count(cuti)
       colnames(freq) <- c("midLengths", dati)
@@ -54,7 +63,10 @@ lfqModify <- function(lfq, par = NULL, bin_size = NA, plus_group = FALSE){
     catch <- catch_mat
     midLengths <- midLengthsNEW
   }
-  if(is.na(bin_size)){
+  if(vectorise_catch & !is.matrix(catch)){
+    stop(paste0("Catch is ", class(catch), ". To vectorise catch, it has to be a matrix."))
+  }
+  if(vectorise_catch & is.matrix(catch)){
     # sum numbers per year
     c_sum <- by(t(catch),format(dates,"%Y"), FUN = colSums)
 
@@ -63,11 +75,11 @@ lfqModify <- function(lfq, par = NULL, bin_size = NA, plus_group = FALSE){
     c_dat <- as.data.frame(c_list)
 
     # get rid of 0 bins at both ends
-    lowRow <- 1
+    lowRow <- 0
     resi <- TRUE
     while(resi == TRUE){
-      resi <- rowSums(c_dat)[lowRow] == 0
       lowRow <- lowRow + 1
+      resi <- rowSums(c_dat)[lowRow] == 0
     }
 
     upRow <- nrow(c_dat)
@@ -86,8 +98,8 @@ lfqModify <- function(lfq, par = NULL, bin_size = NA, plus_group = FALSE){
   }
 
   # plus group
-  if(plus_group[1]){
-    if(length(plus_group) == 1){
+  if(isTRUE(plus_group) | is.numeric(plus_group)){
+    if(isTRUE(plus_group)){
       if(is.vector(catch)){
         print(data.frame(midLengths = midLengths, frequency = catch))
       }else if(length(unique(format(lfq$dates, "%Y"))) == 1){
@@ -118,18 +130,32 @@ lfqModify <- function(lfq, par = NULL, bin_size = NA, plus_group = FALSE){
           if(is.na(pg)){break}  # breaks when hit enter
         }
       }
-    }else if(length(plus_group) == 2){
-      pg = as.numeric(as.character(plus_group[2]))
+    }else if(is.numeric(plus_group)){
+      pg = as.numeric(as.character(plus_group))
     }
-
+    if(!(pg %in% midLengths)){
+      stop(paste0(pg, " is not an element of midLengths. Set 'plus_group' TRUE and pick a length class \n or check the vector 'midLengths' in your data."))
+    }
     midLengths <- midLengths[1:which(midLengths == pg)]
     if(is.vector(catch)){
-      addplus <- sum(catch[((which(midLengths == pg)+1):length(catch))])
+      if(which(midLengths == pg) < (length(catch)-1)){
+        addplus <- sum(catch[((which(midLengths == pg)+1):length(catch))])
+      }else if(which(midLengths == pg) == (length(catch)-1)){
+        addplus <- catch[(which(midLengths == pg)+1)]
+      }else if(which(midLengths == pg) == (length(catch))){
+        addplus <- 0
+      }
       catch <- catch[1:which(midLengths == pg)]
       catch[which(midLengths == pg)] <-
         catch[which(midLengths == pg)] + addplus
     }else{
-      addplus <- colSums(catch[((which(midLengths == pg)+1):nrow(catch)),])
+      if(which(midLengths == pg) < (nrow(catch)-1)){
+        addplus <- colSums(catch[((which(midLengths == pg)+1):nrow(catch)),])
+      }else if(which(midLengths == pg) == (nrow(catch)-1)){
+        addplus <- catch[(which(midLengths == pg)+1),]
+      }else if(which(midLengths == pg) == (nrow(catch))){
+        addplus <- 0
+      }
       catch <- catch[1:which(midLengths == pg),]
       catch[which(midLengths == pg),] <-
         catch[which(midLengths == pg),] + addplus
@@ -156,6 +182,8 @@ lfqModify <- function(lfq, par = NULL, bin_size = NA, plus_group = FALSE){
   if("K" %in% names(lfq)) res$K <- lfq$K
   if("t0" %in% names(lfq)) res$t0 <- lfq$t0
   if("t_anchor" %in% names(lfq)) res$t_anchor <- lfq$t_anchor
+  if("C" %in% names(lfq)) res$C <- lfq$C
+  if("ts" %in% names(lfq)) res$ts <- lfq$ts
   if("M" %in% names(lfq)) res$M <- lfq$M
   if("Z" %in% names(lfq)) res$Z <- lfq$Z
   if("FM" %in% names(lfq)) res$FM <- lfq$FM

@@ -26,6 +26,14 @@
 #' @param contour used in combination with the Isopleth graph. Usage
 #'    can be logical (e.g. TRUE) or providing a numeric which indicates the
 #'    number of levels (\code{nlevels} in \code{\link{contour}}). By default TRUE.
+#' @param xlab Label of x-axis. If set to NA, then default "Fishing mortality", or
+#'    "Exploitation rate" is used.
+#' @param ylab1 Label of y-axis. If set to NA, then default "Yield" is used for the
+#'     Thompson and Bell model, "Lc" is used for the Isopleth graph, and "Y/R" is used for ypr.
+#' @param ylab2 Label of second y-axis. If set to NA, then default "Biomass" is used for
+#'    the Thompson and Bell model and "B/R" for ypr.
+#' @param ylab3 Label of third y-axis. If set to NA, then default "Value" is used
+#'    for the Thompson and Bell model.
 #' @param ... optional parameters of plot function
 #'
 #' @examples
@@ -61,7 +69,9 @@
 plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
                              yaxis1 = "Y_R.rel", yaxis2 = "B_R.rel",
                              yaxis_iso = "Lc",
-                             identify = FALSE, mark = FALSE, contour = TRUE, ...){
+                             identify = FALSE, mark = FALSE, contour = TRUE,
+                             xlab = NA, ylab1 = NA, ylab2 = NA, ylab3 = NA,
+                             ...){
   pes <- x
 
   # function for identifying Lc and yield/biomass values in plot
@@ -102,6 +112,9 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
     if(xaxis1 == "FM"){
       px <- pes$FM_change
       xlabel1 <- "Fishing mortality"
+      if(pes$FM_relative){
+        xlabel1 <- "rel. Fishing mortality"
+      }
 
       N05 <- df_Es$F05
       Nmax <- df_Es$Fmsy
@@ -112,6 +125,9 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
     }else{
       px <- pes$E_change
       xlabel1 <- "Exploitation rate"
+      if(pes$FM_relative){
+        xlabel1 <- "rel. Exploitation rate"
+      }
 
       N05 <- df_Es$E05
       Nmax <- df_Es$Emsy
@@ -120,6 +136,28 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
       }else legend.lab <- c("Emsy")
       if("currents" %in% names(pes)) curr_markX <- pes$currents$curr.E
     }
+    if(!is.na(xlab[1])){
+      xlabel1 <- xlab
+    }
+    if(is.na(ylab1[1])){
+      ylabel1 <- "Yield"
+    }
+    if(!is.na(ylab1[1])){
+      ylabel1 <- ylab1
+    }
+    if(is.na(ylab2[1])){
+      ylabel2 <- "Biomass"
+    }
+    if(!is.na(ylab2[1])){
+      ylabel2 <- ylab2
+    }
+    if(is.na(ylab3[1])){
+      ylabel3 <- "Value"
+    }
+    if(!is.na(ylab3[1])){
+      ylabel3 <- ylab3
+    }
+
 
 
     #save x axis positions
@@ -138,7 +176,7 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
     py2 <- pes$meanB[1:length(px)]
 
     #op <- par(oma = c(1, 1, 1.5, 1),new=FALSE,mar = c(5, 4, 4, 6) + 0.3)
-    plot(px,py, type ='l',ylab='Yield',xlab= xlabel1,
+    plot(px,py, type ='l',ylab=ylabel1,xlab= xlabel1,
          col ='black', ylim = c(0,ceiling(max_yiel/dim_yiel)*dim_yiel),
          lwd=1.6)
     # F or E max
@@ -164,7 +202,7 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
     plot(px,py2,type ='l',ylab='',xlab='',
          col='blue',lwd=1.6,axes=FALSE)
     axis(4,at=pretty(c(0,max(pes$meanB))),col = "blue", col.axis="blue")
-    mtext("Biomass", side=4, line=2, col = "blue", cex=1)
+    mtext(ylabel2, side=4, line=2.5, col = "blue", cex=1)
     # F or E 05
     segments(x0 = -1, x1 = N05, y0 = py2[which(px == N05)], y1 = py2[which(px == N05)],
              col= 'red',lty = 3, lwd=1.5)
@@ -193,8 +231,8 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
       plot(px,py3,type='l',axes=FALSE,ylab='',xlab='',
            col = 'darkgreen',lwd=1.6,
            ylim = c(0,ceiling(max_val/dim_val)*dim_val))    # draw lines with small intervals: seq(0,max(),0.05) but y as to be dependent of x (formula of calculaiton of y)
-      axis(4,at=pretty(c(0,pes$totV)),line = 3,col.axis="darkgreen",col="darkgreen")
-      mtext("Value", side=4, line=5,col="darkgreen")
+      axis(4,at=pretty(c(0,pes$totV)),line = 3.6,col.axis="darkgreen",col="darkgreen")
+      mtext(ylabel3, side=4, line=5.7,col="darkgreen")
     }
 
     # #par(oma = c(0, 0, 0, 0), new = TRUE)
@@ -211,8 +249,17 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
     p.FE <- xaxis1
     p.B <- yaxis2
     xlabel1 <- ifelse(xaxis1 == "FM", "Fishing mortality", "Exploitation rate")
+    if(pes$FM_relative){
+      xlabel1 <- ifelse(xaxis1 == "FM", "rel. Fishing mortality", "rel. Exploitation rate")
+    }
     #ylabel1 <- ifelse(yaxis1 == "Y_R", "Y/R", "rel. Y/R")
     ylabel_iso <- ifelse(yaxis_iso == "Lc", "Lc", "Lc / Linf")
+    if(!is.na(xlab[1])){
+      xlabel1 <- xlab
+    }
+    if(!is.na(ylab1[1])){
+      ylabel_iso <- ylab1
+    }
 
     Lc_change <- pes$Lc_change
     FM_change <- pes$FM_change
@@ -292,9 +339,25 @@ plot.predict_mod <- function(x, type = 'ypr', xaxis1 = "FM",
     p.FE <- xaxis1
     p.B <- yaxis2
     xlabel1 <- ifelse(xaxis1 == "FM", "Fishing mortality", "Exploitation rate")
+    if(pes$FM_relative){
+      xlabel1 <- ifelse(xaxis1 == "FM", "rel. Fishing mortality", "rel. Exploitation rate")
+    }
     ylabel1 <- ifelse(yaxis1 == "Y_R", "Y/R", "rel. Y/R")
     ylabel2 <- ifelse(yaxis2 == "B_R", "B/R", "B/R [%]")
     ylabel_iso <- ifelse(yaxis_iso == "Lc", "Lc", "Lc / Linf")
+    if(!is.na(xlab[1])){
+      xlabel1 <- xlab
+    }
+    if(!is.na(ylab1[1])){
+      ylabel1 <- ylab1
+    }
+    if(!is.na(ylab2[1])){
+      ylabel2 <- ylab2
+    }
+    if(!is.na(ylab1[1])){
+      ylabel_iso <- ylab1
+    }
+
 
 
     df_Es <- pes$df_Es

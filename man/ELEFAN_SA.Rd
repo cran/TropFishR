@@ -80,7 +80,8 @@ square-root transformation of positive values according to Brey et al. (1988).
 \item{plot}{logical; Plot restructured counts with fitted lines using
 \code{\link{plot.lfq}} and \code{\link{lfqFitCurves}} (default : FALSE).}
 
-\item{plot.score}{logical; Plot simulated annealing score progression.}
+\item{plot.score}{logical; Plot simulated annealing score progression.
+(Default: plot.score=TRUE)}
 }
 \value{
 A list with the input parameters and following list objects:
@@ -160,4 +161,3 @@ growth parameters from length-frequency data. \emph{Meeresforschung}, 28(4):205-
 Xiang, Y., Gubian, S., Suomela, B., & Hoeng, J. (2013). Generalized simulated
 annealing for global optimization: the GenSA Package. R Journal, 5(1), 13-28.
 }
-

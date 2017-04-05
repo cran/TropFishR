@@ -4,12 +4,34 @@
 \alias{plot.VPA}
 \title{VPA plot}
 \usage{
-\method{plot}{VPA}(x, display_last_class = TRUE, ...)
+\method{plot}{VPA}(x, yaxis = "numbers", display_last_class = TRUE,
+  xlabel = NA, ylabel1 = "Population", ylabel2 = "Fishing mortality",
+  ylim = NA, ylim_FM = NA, plot.bars = TRUE, plot.FM = TRUE,
+  plot.legend = TRUE, ...)
 }
 \arguments{
 \item{x}{list of the class \code{"VPA"} containing the results of the VPA model.}
 
+\item{yaxis}{indicating which variable should be displayed on the y axis, either "numbers" or "biomass".}
+
 \item{display_last_class}{logical; should last age/length class be displayed in graph?}
+
+\item{xlabel}{Label of the x axis}
+
+\item{ylabel1}{Label of the first y axis}
+
+\item{ylabel2}{Label of the second y axis}
+
+\item{ylim}{limits of y axis}
+
+\item{ylim_FM}{limits of y axis of fishing mortality plot}
+
+\item{plot.bars}{logical; should the barplot of survivors, nat.losses and catch
+be displayed? (Default: TRUE)}
+
+\item{plot.FM}{logical; should the fishing mortality be displayed in the graph? (Default: TRUE)}
+
+\item{plot.legend}{logical; should a legend be displayed in the graph? (Default: TRUE)}
 
 \item{...}{standard parameters of \code{\link{barplot}}}
 }
@@ -19,12 +41,17 @@ This function plots the survivors, catches, natural losses, and fishing
 }
 \examples{
 data(whiting)
-output <- VPA(whiting, terminalF = 0.5, analysis_type = "VPA")
+output <- VPA(whiting, terminalF = 0.5)
 plot(output, display_last_class = FALSE)
+
+data(hake)
+output <- VPA(hake, terminalE = 0.5, catch_unit = "'000")
+plot_mat <- output$plot_mat[,-c(1,2)]  # remove first two length classes
+class(plot_mat) <- "VPA"
+plot(plot_mat, xlabel = "Midlengths [cm]")
 
 }
 \references{
 Sparre, P., Venema, S.C., 1998. Introduction to tropical fish stock assessment.
 Part 1. Manual. FAO Fisheries Technical Paper, (306.1, Rev. 2). 407 p.
 }
-

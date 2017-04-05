@@ -4,8 +4,9 @@
 \alias{VPA}
 \title{Virtual Population Analysis (VPA)}
 \usage{
-VPA(param, terminalF, analysis_type, catch_corFac = NA, catch_columns = NA,
-  algorithm = "new", plus_group = FALSE, plot = FALSE)
+VPA(param, catch_columns = NA, catch_unit = NA, catch_corFac = NA,
+  terminalF = NA, terminalE = NA, analysis_type = "VPA",
+  algorithm = "new", plus_group = TRUE, plot = FALSE)
 }
 \arguments{
 \item{param}{a list consisting of following parameters:
@@ -15,32 +16,40 @@ VPA(param, terminalF, analysis_type, catch_corFac = NA, catch_columns = NA,
   \item \code{Linf}: infinite length for investigated species in cm [cm],
   \item \code{K}: growth coefficent for investigated species per year [1/year],
   \item \code{t0}: theoretical time zero, at which individuals of this species hatch,
-  \item \code{M}: natural mortality [1/year],
-  \item \code{a}: length-weight relationship coefficent (W = a * L^b),
+  \item \code{M}: natural mortality [1/year] (numeric value or vector of identical
+     length than midLengths),
+  \item \code{a}: length-weight relationship coefficent (W = a * L^b; for kg/cm3),
   \item \code{b}: length-weight relationship coefficent (W = a * L^b),
   \item \code{catch}: catch as vector for pseudo cohort analysis,
-     or a matrix with catches of subsequent years to follow a real cohort;
+     or a matrix with catches of subsequent years to follow a real cohort.
+     For age-based VPA/CA catch has to be provided in numbers, e.g. '000 individuals
+     for length-based VPA/CA catch can also be provided in weight, e.g. kg (use
+     argument \code{catch_unit}).
 }}
 
-\item{terminalF}{a fishing mortality value which is used as the terminal FM for the
-last age/length group.}
+\item{catch_columns}{numerical; indicating the column of the catch matrix which should be
+used for the analysis.}
 
-\item{analysis_type}{determines which type of assessment should be done,
-options: "VPA" for classical age-based VPA, "CA" for age- or length-based
-Cohort analysis}
+\item{catch_unit}{optional; a character indicating if the catch is provided in weight
+("tons" or "kg") or in thousand individuals ("'000")}
 
 \item{catch_corFac}{optional; correction factor for catch, in case provided
 catch does spatially or temporarily not reflect catch for fishing ground of
 a whole year.}
 
-\item{catch_columns}{numerical; indicating the column of the catch matrix which should be
-used for the analysis.}
+\item{terminalF}{the fishing mortality rate of the last age/length group.}
+
+\item{terminalE}{the exploitation rate of the last age/length group.}
+
+\item{analysis_type}{determines which type of assessment should be done,
+options: "VPA" for age or length-based Virtual Population Analysis, "CA" for age- or length-based
+Cohort Analysis. Default is "VPA".}
 
 \item{algorithm}{an Algorithm to use to solve for fishing mortality. The default
 setting \code{"new"} uses \code{\link[stats]{optimise}},
 while \code{"old"} uses the algorithm described by Sparre and Venema (1998).}
 
-\item{plus_group}{logical; indicating if the last length group is a plus group}
+\item{plus_group}{logical; indicating if the last length group is a plus group (default: TRUE).}
 
 \item{plot}{logical; indicating whether a plot should be printed}
 }
@@ -52,8 +61,10 @@ A list with the input parameters and following list objects:
   the analysis (exists only if catch was a matrix),
   \item \strong{FM_calc}: a vector with the ifshing mortality (M),
   \item \strong{Z}: a vector with the total mortality (Z),
-  \item \strong{survivors}: a vector with the number of fish surviving to the next age class or length group,
-  \item \strong{annualMeanNr}: ta vector with the mean number of fish per year,
+  \item \strong{survivors}: a vector with the number of fish surviving to the
+      next age class or length group (same unit than input catch vector),
+  \item \strong{annualMeanNr}: ta vector with the mean number of fish per year
+     (same unit than input catch vector),
   \item \strong{meanBodyWeight}: a vector with the mean body weight in kg,
   \item \strong{meanBiomassTon}: a vector with the mean biomass in tons,
   \item \strong{YieldTon}: a vector with the yield in tons,
@@ -75,6 +86,9 @@ The main difference between virtual population analysis (VPA) and cohort
    caught during a single day, which makes the calcualtion easier, VPA assumes that
    the fish are caught continuously, which has to be solved by the trial and error
    method (Sparre and Venema, 1998).
+   For the age-based VPA/CA the catch has to be provided in numbers (or '000 numbers),
+   while for the length-based VPA/CA the catch can also be provided in weight (tons or kg) by
+   using the argument \code{catch_unit}.
    The catch has to be representative for fished species, that means there should not be
    other fisheries fishing the same stock. If this is the case \code{catch_corFac} can
    be used as a raising factor to account for the proportion of fish caught by other
@@ -93,17 +107,24 @@ The main difference between virtual population analysis (VPA) and cohort
 #_______________________________________________
 # Virtual Popuation Analysis with age-composition data
 data(whiting)
-output <- VPA(param = whiting, terminalF = 0.5, analysis_type = "VPA")
+output <- VPA(param = whiting, catch_columns = 1, terminalE = 0.5, analysis_type = "VPA")
 plot(output)
 #_______________________________________________
 # Pope's Cohort Analysis with age-composition data
 data(whiting)
-VPA(whiting, terminalF = 0.5, analysis_type = "CA", plot= TRUE)
+VPA(whiting, terminalE = 0.5, catch_columns = 3, analysis_type = "CA",
+   plot= TRUE, plus_group = TRUE)
 
+#_______________________________________________
+# Virtual population analysis with length-composition data
+data(hake)
+VPA(hake, terminalE = 0.5, analysis_type = "VPA", plot = TRUE,
+    catch_unit = "'000", plus_group = TRUE)
 #_______________________________________________
 # Jones's Cohort Analysis with length-composition data
 data(hake)
-VPA(hake, terminalF = 0.5, analysis_type = "CA", plot = TRUE)
+VPA(hake, terminalE = 0.5, analysis_type = "CA", plot = TRUE,
+   catch_unit = "'000", plus_group = TRUE)
 
 }
 \references{
@@ -134,4 +155,3 @@ Institut Francais de Recherche pour l'Exploitation de la Mer. Nantes, France. 16
 \keyword{function}
 \keyword{mortality}
 \keyword{stock}
-
