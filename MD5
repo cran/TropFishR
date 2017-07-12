@@ -1,4 +1,4 @@
-97b0d317414cb527e51da0a50eb48807 *DESCRIPTION
+6b8ee960e30e685f3e394d8634dcd49a *DESCRIPTION
 0b1d5fe7f8c1e97768796d4cdb9bcd82 *NAMESPACE
 a5d32ff8fdb6f4f2e66b23b0e7d11648 *R/Bhattacharya.R
 4d92d6d15826d399ec186bfdbdf92ba7 *R/ELEFAN.R
@@ -11,7 +11,7 @@ a8cc7c5f4aacaad3633f28dd4839c937 *R/Z_BevertonHolt.R
 84a8f4f36973f6c110d9518b14ffcd1e *R/Z_CPUE.R
 8b9658be23beace3c80bec24d8ff9b10 *R/alba.R
 28af74916d1011f2069250a226a8d1a1 *R/bream.R
-f8d4b860838d16a4afffd57e1440f2c8 *R/catchCurve.R
+8ddc35e9b32fba6c798dd16b242e8894 *R/catchCurve.R
 d9b2ccbf7cec04c728441515a47e125b *R/date2yeardec.R
 1a25dec211354be50dfe1ae588bcab79 *R/emperor.R
 ae9e08a1d65c243089c709e0d472dfda *R/gillnet.R
@@ -27,8 +27,8 @@ e63e36f4de9242b3f2623e891d795320 *R/lfqFitCurves.R
 92abad3a80620b756329bb44fe6eb67d *R/lfqRestructure.R
 12959c4dca6f7d4a63d9dd433ad03cab *R/plot.Bhattacharya.R
 dade4949ad54b0e3436014b8d0e6e9b1 *R/plot.VPA.R
-58440f295df150de553cceded5a32a67 *R/plot.catchCurve.R
-7dc88bd16fd7d9de648e0b2ac6696993 *R/plot.lfq.R
+8ef6a7900ad2bf5e3fc550b0e5caf621 *R/plot.catchCurve.R
+809eb3dfe0c6f4dac9cfa814e7f548b1 *R/plot.lfq.R
 8f98e0f5d07243c1f364cdeedebc0679 *R/plot.predict_mod.R
 b62b0c89c113e1e8e3ba3e7d81de844a *R/plot.prod_mod.R
 a8249463cdab41a1fe4bce65ffa92ff2 *R/plot.prod_mod_ts.R
@@ -65,7 +65,7 @@ c304b26b0bb6d83aaf3c0ee577a9e7bb *R/trammelnet.R
 efff4e571f6d6b32088e4fb51e22345a *R/yeardec2date.R
 4df4b8757f68d4a58d178584eeaad0f9 *R/ypr.R
 9d6d39e491ef1ec10db33dfbfb701212 *R/ypr_sel.R
-9c8160866ecf4126580412ce78916101 *README.md
+1cdeecc6fc9df953a5131ac4e1303ca3 *README.md
 c88345e32fa088ccecae0695b5a0c6c2 *build/vignette.rds
 a3bcc4e208190ff2c5d1bc28782f1214 *data/alba.rda
 3cb4fd27334445c1403b4a21fa84797a *data/bream.rda
@@ -89,9 +89,10 @@ b7a8cf7662f33c96a81a0fe81aeaec67 *data/synLFQ7.rda
 554f4caf9125b3a800b3bdcedaf8254c *data/trammelnet.rda
 5dccf81a7fee77adfb43f25707c258d2 *data/trawl_fishery_Java.rda
 5f3f56a8bf9a4a0e4db640c334f5a7e5 *data/whiting.rda
+bb1be4a52adccd04e6e93d427e8e0fe6 *inst/CITATION
 889cdd6bbdb0c5b403efb3d9e29ac156 *inst/doc/tutorial.R
-e0a9e74c90636a9fa60f19963493cb32 *inst/doc/tutorial.Rmd
-7d61d7ac290944d48a116295ee9463fb *inst/doc/tutorial.html
+a2f40c877b54b8888b81d3696c5c7cd9 *inst/doc/tutorial.Rmd
+03299fab48d2222b70bf0773482f97ff *inst/doc/tutorial.html
 4388e6b146999d8f5fd05315165e4ea5 *man/Bhattacharya.Rd
 0d75b13ff8b5e65fc8041b5773864400 *man/ELEFAN.Rd
 359912cb4d6b2b1a58bf9b36850561a8 *man/ELEFAN_GA.Rd
@@ -119,7 +120,7 @@ a8bd746f5cfdfd4cfee6961980d3ab54 *man/hake.Rd
 94ef242cdc096c97317c91370bd13104 *man/lfqRestructure.Rd
 c48701817b80abb9cc75b3cfc89907d2 *man/plot.Bhattacharya.Rd
 0c9f57695fe875a19cf9a0524718de75 *man/plot.VPA.Rd
-daa1cecb63e8ff46bee0b1a7a632445d *man/plot.catchCurve.Rd
+65978640fdf1bff498771dacc2e1b403 *man/plot.catchCurve.Rd
 3834041f40d5889fbe9ef15433e80641 *man/plot.lfq.Rd
 1efb15be15bb1a3e628c82ee24d64fe7 *man/plot.predict_mod.Rd
 44639120f95888ad403aab92fd0fdca1 *man/plot.prod_mod.Rd
@@ -158,4 +159,4 @@ daa2eb14da100b298165ccb0919f0869 *man/yeardec2date.Rd
 904e2ef609f8488c6bb52a115e763d30 *man/ypr.Rd
 c20ebbaab1f61fb49e5648303f30379f *man/ypr_sel.Rd
 643cc0d751987bdff047bcd354062a63 *vignettes/TropFishR.bib
-e0a9e74c90636a9fa60f19963493cb32 *vignettes/tutorial.Rmd
+a2f40c877b54b8888b81d3696c5c7cd9 *vignettes/tutorial.Rmd
