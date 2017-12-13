@@ -8,7 +8,8 @@ ELEFAN_GA(x, seasonalised = FALSE, low_par = NULL, up_par = NULL,
   popSize = 50, maxiter = 100, run = maxiter, parallel = FALSE,
   pmutation = 0.1, pcrossover = 0.8, elitism = base::max(1, round(popSize
   * 0.05)), MA = 5, addl.sqrt = FALSE, agemax = NULL,
-  flagging.out = TRUE, seed = 1, plot = FALSE, plot.score = TRUE, ...)
+  flagging.out = TRUE, seed = NULL, monitor = FALSE, plot = FALSE,
+  plot.score = TRUE, ...)
 }
 \arguments{
 \item{x}{a list consisting of following parameters:
@@ -86,13 +87,24 @@ ELEFAN in TRUE. Default:TRUE}
 
 \item{seed}{an integer value containing the random number generator state. This
 argument can be used to replicate the results of a GA search. Note that
-if parallel computing is required, the doRNG package must be installed.}
+if parallel computing is required, the doRNG package must be installed.
+(Default: 'seed = NULL')}
+
+\item{monitor}{a logical or an R function which takes as input the current
+state of the 'ga-class' object and show the evolution of the
+search. By default, 'monitor = FALSE' so any
+output is suppressed. Possible also, the functions
+'gaMonitor' or 'gaMonitor2' (depending on whether or not is
+an RStudio session) which print the average and best fitness
+values at each iteration. If set to 'plot' these information
+are plotted on a graphical device. Other functions can be
+written by the user and supplied as argument.}
 
 \item{plot}{logical; Plot restructured counts with fitted lines using
 \code{\link{plot.lfq}} and \code{\link{lfqFitCurves}} (default : FALSE).}
 
 \item{plot.score}{logical; Plot genetic algorithm fitness progression.
-(Default: plot.score=TRUE)}
+(Default: plot.score=TRUE).}
 
 \item{...}{additional parameters to pass to \code{\link[GA]{ga}}}
 }
@@ -159,7 +171,7 @@ output$Rn_max
 # compare fitness score (fESP) to
 # that calculated with "true" growth parameter values
 plot(output, draw = FALSE)
-lfqFitCurves(output, par=list(Linf=80, K=0.5, t_anchor=0.25, C=0.75, ts=0),
+lfqFitCurves(output, par=list(Linf=80, K=0.5, t_anchor=0.25, C=0.75, ts=0.5),
        draw = TRUE, col=1, flagging.out = FALSE)$fESP
 lfqFitCurves(output, par=output$par, draw = TRUE, col=2, flagging.out = FALSE)$fESP
 legend("top", legend=c("orig.", "GA"), lty=2, col=1:2, ncol=2)
