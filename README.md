@@ -1,13 +1,15 @@
 TropFishR
 =====
 
+
 ## Package description
+   	
 TropFishR is a collection of fisheries models based on the FAO Manual 
 "Introduction to tropical fish stock assessment" by Sparre and Venema 
 (1998, 1999). Not only scientists working in the tropics will benefit from 
 this new toolbox. The methods work with age based or length-frequency data 
 and assist in the assessment of data poor fish stocks. Overall, the package 
-comes with 33 functions, 21 data sets and 10 s3 methods. All objects are 
+comes with 30 functions, 19 data sets and 10 s3 methods. All objects are 
 documented and provide examples that allow reproducing the examples from 
 the FAO manual. 
 
@@ -36,9 +38,9 @@ how to cite this package.
 
 
 ## Vignettes
-A [tutorial](https://rawgit.com/tokami/TropFishR/master/inst/doc/tutorial.html)
-demonstrates the use of some of the main functions of TropFishR for a 
-single-species stock assessment with length-frequency data. The [second vignette](https://rawgit.com/tokami/TropFishR/master/inst/doc/lfqData.html) gives a brief description of LFQ data and illustrates how files with raw length measurements (e.g. excel files) can be imported into R and trimmed for the use with TropFishR.
+The [tutorial](https://cran.r-project.org/package=TropFishR/vignettes/tutorial.html)
+demonstrates the use of the main functions of TropFishR for a 
+single-species stock assessment with length-frequency data. The [second vignette](https://cran.r-project.org/package=TropFishR/vignettes/lfqData.html) gives a brief description of LFQ data and illustrates how files with raw length measurements (e.g. excel files) can be imported into R and trimmed for the use with TropFishR. The vignette [ELEFANTutorial](https://rawgit.com/tokami/TropFishR/master/inst/doc/Using_TropFishR_ELEFAN_functions.html) demonstrates the ELEFAN functions available in TropFishR in detail and discusses best practices.
 
 
 ## Questions / Issues
