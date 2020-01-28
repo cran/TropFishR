@@ -3,7 +3,7 @@
 #' @description Electronic LEngth Frequency ANalysis with simulated annealing
 #'    for estimating growth parameters.
 #'
-#' @param x a list consisting of following parameters:
+#' @param lfq a list consisting of following parameters:
 #' \itemize{
 #'   \item \strong{midLengths} midpoints of the length classes,
 #'   \item \strong{dates} dates of sampling times (class Date),
@@ -145,26 +145,24 @@
 #' annealing for global optimization: the GenSA Package. R Journal, 5(1), 13-28.
 #' @export
 
-ELEFAN_SA <- function(
-  x,
-  seasonalised = FALSE,
-  init_par = list(Linf = 50, K = 0.5, t_anchor = 0.5, C = 0, ts = 0),
-  low_par = NULL,
-  up_par = NULL,
-  SA_time = 60 * 1,
-  maxit = NULL,
-  nb.stop.improvement = NULL,
-  SA_temp = 1e5,
-  verbose = TRUE,
-  MA = 5, addl.sqrt = FALSE,
-  agemax = NULL,
-  flagging.out = TRUE,
-  plot = FALSE,
-  plot.score = TRUE
-){
+ELEFAN_SA <- function(lfq,
+                      seasonalised = FALSE,
+                      init_par = list(Linf = 50, K = 0.5, t_anchor = 0.5, C = 0, ts = 0),
+                      low_par = NULL,
+                      up_par = NULL,
+                      SA_time = 60 * 1,
+                      maxit = NULL,
+                      nb.stop.improvement = NULL,
+                      SA_temp = 1e5,
+                      verbose = TRUE,
+                      MA = 5, addl.sqrt = FALSE,
+                      agemax = NULL,
+                      flagging.out = TRUE,
+                      plot = FALSE,
+                      plot.score = TRUE){
 
-  res <- x
-  classes <- res$midLengths
+    res <- lfq
+    classes <- res$midLengths
   n_classes <- length(classes)
   Linf_est <- classes[n_classes]
 

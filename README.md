@@ -1,8 +1,8 @@
-TropFishR 
+TropFishR
 =====
-	
+
 ## Package description
-   	
+
 TropFishR is a collection of fisheries models based on the FAO Manual
 "Introduction to tropical fish stock assessment" by Sparre and Venema
 (1998, 1999). Not only scientists working in the tropics will benefit
@@ -12,13 +12,13 @@ stocks. Overall, the package comes with 30 functions, 19 data sets and
 10 s3 methods. All objects are documented and provide examples that
 allow reproducing the examples from the FAO manual.
 
-    
+
 ## News
 You can find detailed descriptions of new features, bug fixes, other
 changes of specific package versions
 [here](https://rawgit.com/tokami/TropFishR/master/inst/doc/news.html).
 
-     
+
 ## Installation
 Download the released version of TropFishR from CRAN:
 
@@ -62,7 +62,7 @@ discuss with TropFishR users and developers, follow the project on
 
 
 ## References
-1. Sparre, P., Venema, S.C., 1998. Introduction to tropical fish stock assessment. Part 1. Manual. FAO Fisheries Technical Paper, (306.1, Rev. 2). 407p. [link](http://www.fao.org/docrep/w5449e/w5449e00.htm)
-2. Sparre, P., Venema, S.C., 1999. Introduction to tropical fish stock assessment. Part 2. Excercises. FAO Fisheries Technical Paper, (306.2, Rev. 2). 94p. [link](http://www.fao.org/docrep/w5448e/w5448e00.htm)
+1. Sparre, P., Venema, S.C., 1998. Introduction to tropical fish stock assessment. Part 1. Manual. FAO Fisheries Technical Paper, (306.1, Rev. 2). 407p. [link](http://www.fao.org/documents/card/en/c/9bb12a06-2f05-5dcb-a6ca-2d6dd3080f65/)
+2. Sparre, P., Venema, S.C., 1999. Introduction to tropical fish stock assessment. Part 2. Excercises. FAO Fisheries Technical Paper, (306.2, Rev. 2). 94p. [link](http://www.fao.org/3/W5448E/W5448E00.htm)
 3. Mildenberger, T. K., Taylor, M. H. and Wolff, M., 2017. TropFishR: an R package for fisheries analysis with length-frequency data. Methods in Ecology and Evolution, 8: 1520-1527. doi:10.1111/2041-210X.12791 [link](https://doi.org/10.1111/2041-210X.12791)
 4. Taylor, M. H., and Mildenberger, T. K., 2017. Extending electronic length frequency analysis in R. Fisheries Management and Ecology, 24:330-338. doi:10.1111/fme.12232 [link](https://doi.org/10.1111/fme.12232)
