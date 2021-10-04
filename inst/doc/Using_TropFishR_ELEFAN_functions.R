@@ -155,6 +155,7 @@ true_par <- list(Linf = 80, K = 0.5, t_anchor = 0.25,C = 0.75,  ts = 0.5, phiL =
 
 ## -----------------------------------------------------------------------------
 set.seed(1)
+data("synLFQ4")
 synLFQ4 <- ELEFAN_GA(
   lfq = synLFQ4,
   seasonalised = TRUE,

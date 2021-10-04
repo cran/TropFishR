@@ -1,4 +1,4 @@
-TropFishR
+TropFishR :fishing_pole_and_fish:
 =====
 
 ## Package description
@@ -14,23 +14,22 @@ allow reproducing the examples from the FAO manual.
 
 
 ## News
-You can find detailed descriptions of new features, bug fixes, other
-changes of specific package versions
-[here](https://rawgit.com/tokami/TropFishR/master/inst/doc/news.html).
+You can find detailed descriptions of new features, bug fixes, other changes of
+specific package versions [here](NEWS.md).
 
 
 ## Installation
 Download the released version of TropFishR from CRAN:
 
 ```R
-install.packages(“TropFishR”)
+install.packages("TropFishR")
 ```
 
 Or the development version from GitHub:
 
 ```R
-# install.packages(devtools)
-devtools::install_github(“tokami/TropFishR”)
+# install.packages("remotes")
+remotes::install_github("tokami/TropFishR")
 ```
 
 ## Citation
@@ -47,7 +46,7 @@ single-species stock assessment with length-frequency data. The
 gives a brief description of LFQ data and illustrates how files with
 raw length measurements (e.g. excel files) can be imported into R and
 trimmed for the use with TropFishR. The
-[ELEFANTutorial](https://rawgit.com/tokami/TropFishR/master/inst/doc/Using_TropFishR_ELEFAN_functions.html)
+[ELEFANTutorial](https://cran.r-project.org/package=TropFishR/vignettes/Using_TropFishR_ELEFAN_functions.html)
 demonstrates the ELEFAN functions available in TropFishR in detail and
 discusses best practices.
 
