@@ -18,7 +18,7 @@ bibentry(
   number = "11",
   pages = "1520--1527",
   doi = "10.1111/2041-210X.12791",
-  url = "http://dx.doi.org/10.1111/2041-210X.12791",
+  url = "https://dx.doi.org/10.1111/2041-210X.12791",
   issn = "2041-210X"
 )
 
@@ -36,11 +36,10 @@ bibentry(
   number = "4",
   pages = "230--238",
   doi = "10.1111/fme.12232",
-  url = "http://doi.wiley.com/10.1111/fme.12232",
+  url = "https://doi.wiley.com/10.1111/fme.12232",
   issn = "0969997X",
 )
 
 
 
 citFooter("As TropFishR is continually evolving, you may want to view the development version at https://github.com/tokami/TropFishR")
-

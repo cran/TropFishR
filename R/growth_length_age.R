@@ -33,7 +33,6 @@
 #' dat <- list(age = rep(1:7,each = 5),
 #'    length = c(rnorm(5,25.7,0.9),rnorm(5,36,1.2),rnorm(5,42.9,1.5),rnorm(5,47.5,2),
 #'    rnorm(5,50.7,0.4),rnorm(5,52.8,0.5),rnorm(5,54.2,0.7)))
-#'
 #' growth_length_age(dat, method = "GullandHolt")
 #'
 #' # Bertalaffy plot
@@ -57,7 +56,10 @@
 #' used for a small or large sample, respectively. All lengths have to be smaller than
 #' Linf as otherwise the logarithm is not defined. Oldest fish (if larger than Linf) have
 #' to be omitted. Non-linear least squares fitting is the preferred method to estimate
-#' growth parameters according to Sparre and Venema (1998).
+#' growth parameters according to Sparre and Venema (1998). If \code{CI = TRUE} the
+#' confidence interval of parameters is calculated and plotted. For plotting the
+#' confidence interval the \code{\link{predictNLS}} from the \link{propagate} package
+#' is applied.
 #'
 #' @return A list with the input parameters and following parameters:
 #' \itemize{
@@ -72,6 +74,7 @@
 #'      (only if LSM method was applied).
 #' }
 #'
+#' @importFrom propagate predictNLS
 #' @importFrom graphics abline lines plot segments
 #' @importFrom stats lm nls predict aggregate confint
 #' @importFrom grDevices adjustcolor
@@ -276,45 +279,31 @@ growth_length_age <- function(param, method, Linf_est = NA,
              }else age_plot <- age_plot
              ## Taylor error propagation and Monte Carlo simulation for confidence interval
              ## if (!requireNamespace("propagate", quietly = TRUE)) {
-             ##     writeLines(paste0("Package \"propagate\" needed for the prediction of ",
-             ##                       "length with uncertainty. Please install it."))
-
-
-             writeLines(paste0("Currently, it is not possible to plot the confidence intervals ",
-                               "due to some issues with dependencies. We will fix this problem."))
-
-             pred_L <- predict(nls_mod,newdata = data.frame(t = age_plot))
-             predVals <- cbind(age_plot,pred_L)
-             names(predVals) <- c("age_plot","fit")
+             ##     stop("Package \"propagate\" needed for this function to work. Please install it.",
+             ##          call. = FALSE)
+             ## }
+             sink(tempfile())
+             pred_L <- suppressMessages(propagate::predictNLS(nls_mod,
+                                                              do.sim = do.sim,
+                                                              nsim = nsim,
+                                             newdata = data.frame(t = age_plot)))
+             sink()
+             # Taylor propagation
+             if(!do.sim){
+               predVals <- cbind(age_plot,as.data.frame(pred_L$summary[,c(1,5,6)]))
+             }
+             # Monte Carlo simulation
+             if(do.sim){
+               predVals <- cbind(age_plot,as.data.frame(pred_L$summary[,c(7,11,12)]))
+             }
+             names(predVals) <- c("age_plot","fit","lower","upper")
              plot(Lt ~ t, type = "n", ylab = "L(t)", xlab = "t(age)", xlim=c(min(age_plot),max(age_plot)),
                   main = "Non-linear least squares method")
+             polygon(c(age_plot,rev(age_plot)),
+                     c(predVals$lower,rev(predVals$upper)),
+                     border = FALSE, col = adjustcolor("dodgerblue", alpha.f = 0.4))
              points(t, Lt)
-             lines(age_plot, predict(nls_mod, newdata = data.frame(t=age_plot)))
-             ## }else{
-             ## sink(tempfile())
-             ## pred_L <- suppressMessages(propagate::predictNLS(nls_mod,
-             ##                                                  do.sim = do.sim,
-             ##                                                  nsim = nsim,
-             ##                                                  newdata = data.frame(t = age_plot)))
-             ## sink()
-             ## ## Taylor propagation
-             ## if(!do.sim){
-             ##     predVals <- cbind(age_plot,as.data.frame(pred_L$summary[,c(1,5,6)]))
-             ## }
-             ## ## Monte Carlo simulation
-             ## if(do.sim){
-             ##     predVals <- cbind(age_plot,as.data.frame(pred_L$summary[,c(7,11,12)]))
-             ## }
-             ## names(predVals) <- c("age_plot","fit","lower","upper")
-             ## plot(Lt ~ t, type = "n", ylab = "L(t)", xlab = "t(age)", xlim=c(min(age_plot),max(age_plot)),
-             ##      main = "Non-linear least squares method")
-             ## polygon(c(age_plot,rev(age_plot)),
-             ##         c(predVals$lower,rev(predVals$upper)),
-             ##         border = FALSE, col = adjustcolor("dodgerblue", alpha.f = 0.4))
-             ## points(t, Lt)
-             ## lines(age_plot, predict(nls_mod,newdata = data.frame(t=age_plot)))
-             ## }
-
+             lines(age_plot, predict(nls_mod,newdata = data.frame(t=age_plot)))
            }
          },
 

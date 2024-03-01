@@ -77,6 +77,7 @@ alba2 <- ELEFAN(
   cross.date = alba$dates[3],
   cross.midLength = alba$midLengths[5],
   contour = TRUE, add.values = FALSE,
+  plot = TRUE,
   hide.progressbar = TRUE # change to 'TRUE' to follow algorithm's progression
 )
 points(alba2$par["Linf"], alba2$par["K"], pch="*", cex=2, col=2)

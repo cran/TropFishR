@@ -12,17 +12,17 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.show = "hold",
                       fig.width=8, fig.height=7)
 
-## ---- echo = TRUE, include = TRUE, eval = FALSE-------------------------------
+## ----echo = TRUE, include = TRUE, eval = FALSE--------------------------------
 #  install.packages("TropFishR", repos = "https://cran.rstudio.com/")
 
-## ---- eval=FALSE, echo=TRUE---------------------------------------------------
+## ----eval=FALSE, echo=TRUE----------------------------------------------------
 #  install.packages("remotes")
 #  remotes::install_github("tokami/TropFishR")
 
-## ---- eval=TRUE, echo=TRUE----------------------------------------------------
+## ----eval=TRUE, echo=TRUE-----------------------------------------------------
 library(TropFishR)
 
-## ---- eval=TRUE, echo=FALSE---------------------------------------------------
+## ----eval=TRUE, echo=FALSE----------------------------------------------------
 data(synLFQ7)
 lfq <- synLFQ7
 
@@ -88,7 +88,7 @@ res_GA <- ELEFAN_GA(lfq_bin2, MA = ma, seasonalised = TRUE,
 res_GA$par
 res_GA$Rn_max
 
-## ---- eval = FALSE, echo = TRUE-----------------------------------------------
+## ----eval = FALSE, echo = TRUE------------------------------------------------
 #  ## list for results
 #  JK <- vector("list", length(lfq_bin2$dates))
 #  
@@ -155,7 +155,7 @@ res_cc <- catchCurve(lfq_catch_vec, reg_int = c(18,55), calc_ogive = TRUE)
 lfq_catch_vec$par$Z <- res_cc$Z
 lfq_catch_vec$par$FM <- as.numeric(lfq_catch_vec$par$Z - lfq_catch_vec$par$M)
 
-## ---- echo=TRUE, eval=TRUE----------------------------------------------------
+## ----echo=TRUE, eval=TRUE-----------------------------------------------------
 lfq_catch_vec$par$E <- lfq_catch_vec$par$FM / lfq_catch_vec$par$Z
 
 ## ----ypr_pars, echo=TRUE, eval=TRUE-------------------------------------------
