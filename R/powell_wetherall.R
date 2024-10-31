@@ -168,7 +168,7 @@ powell_wetherall <- function(param, catch_columns = NA,
             writeLines("Please specify reg_int or choose points for the regression analysis in an interactive session.")
             return(NULL)
         }
-    }
+        }
         if(!is.null(reg_int)){
             cutter <- reg_int
         }

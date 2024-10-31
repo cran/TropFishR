@@ -1,5 +1,7 @@
 #' @name alba
+#'
 #' @title Length-frequency data of the clam Abra alba
+#'
 #' @description Length-frequency data of the clam Abra alba as presented
 #' by Brey et al. (1988). Includes 7 approximately bi-monthly samplings of
 #' A. alba binned into 14 length classes. The data is of class "lfq", which

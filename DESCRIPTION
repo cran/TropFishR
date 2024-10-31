@@ -1,10 +1,19 @@
 Package: TropFishR
 Type: Package
 Title: Tropical Fisheries Analysis
-Version: 1.6.4
-Date: 2024-01-29
-Author: Tobias K. Mildenberger, Marc H. Taylor, Matthias Wolff
-Maintainer: Tobias K. Mildenberger <t.k.mildenberger@gmail.com>
+Version: 1.6.5
+Date: 2024-10-21
+Authors@R: c(person(given = c("Tobias", "K."),
+                    family = "Mildenberger",
+                    role = c("aut", "cre"),
+                    email = "t.k.mildenberger@gmail.com",
+                    comment=c(ORCID="0000-0002-6631-7524")),
+             person(given = c("Marc", "H."),
+                    family = "Taylor",
+                    role = "aut"),
+             person(given = "Matthias",
+                    family = "Wolff",
+                    role = "aut"))
 Depends: R (>= 3.0.0)
 Imports: Matrix, msm, reshape2, MASS, GenSA, GA, stats, utils,
         propagate, parallel, doParallel
@@ -13,16 +22,21 @@ Description: A compilation of fish stock assessment methods for the
     analysis of length-frequency data in the context of data-poor
     fisheries. Includes methods and examples included in the FAO
     Manual by P. Sparre and S.C. Venema (1998), "Introduction to tropical fish
-    stock assessment" (<https://www.fao.org/documents/card/en/c/9bb12a06-2f05-5dcb-a6ca-2d6dd3080f65/>),
+    stock assessment" (<https://openknowledge.fao.org/server/api/core/bitstreams/bc7c37b6-30df-49c0-b5b4-8367a872c97e/content>),
     as well as other more recent methods.
 License: GPL-3
 NeedsCompilation: no
 BugReports: https://github.com/tokami/TropFishR/issues
 URL: https://github.com/tokami/TropFishR
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: graphics, grDevices, knitr, rmarkdown, plyr
 VignetteBuilder: knitr
-Packaged: 2024-02-29 10:59:19 UTC; tobm
+Packaged: 2024-10-31 08:17:41 UTC; tobm
+Author: Tobias K. Mildenberger [aut, cre]
+    (<https://orcid.org/0000-0002-6631-7524>),
+  Marc H. Taylor [aut],
+  Matthias Wolff [aut]
+Maintainer: Tobias K. Mildenberger <t.k.mildenberger@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-03-01 15:22:40 UTC
+Date/Publication: 2024-10-31 09:30:02 UTC

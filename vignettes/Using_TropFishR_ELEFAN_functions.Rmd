@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 
 ### *Introduction*
 
-The following tutorial outlines the use of the ELEFAN functions available in TropFishR (`ELEFAN`, `ELEFAN_GA`, and `ELEFAN_SA`) [@mildenberger_tropfishr:_2017; @Mildenberger2016]. These functions can be used to estimate growth model parameters from length-frequency (lfq) data. The ability to convert length to relative age is the initial step in length-based stock assessment, and underpins subsequent analyses.
+The following tutorial outlines the use of the ELEFAN functions available in TropFishR (`ELEFAN`, `ELEFAN_GA`, and `ELEFAN_SA`) [@mildenberger_tropfishr:_2017; @Mildenberger2016]. These functions can be used to estimate growth model parameters from length-frequency (lfq) data. The ability to convert length to relative age is the initial step in length-based stock assessment, and underpins subsequent analyses (see the [TropFishR tutorial](https://cran.r-project.org/package=TropFishR/vignettes/tutorial.html) for a broader overview of length-based stock assessment).
 
 The growth model presently implemented within TropFishR is the von Bertalanffy growth function (VBGF),
 
@@ -86,7 +86,7 @@ Such variation in growth is common in many organisms, but may be more pronounced
 
 The first step to using the ELEFAN functions is to have a length-frequency  object loaded (class `lfq`). For the majority of the following examples, we will use the relatively small `alba` lfq dataset (Abra alba mollusc sampled in Kiel Bay [@brey_electronic_1988]), which consists of approximately bi-monthly sampling of length-frequencies taken over the course of one and a half years. The `alba` dataset is included within the current TropFishR version.
 
-An `lfq` class dataset is essentially a `list` containing the following elements: a catch frequency matrix (`lfq$catch`), a vector of mid-lengths (`lfq$midLengths`) corresponding to rows of the catch matrix, and a vector of dates (`lfq$dates`) corresponding to the columns of the catch matrix. The `lfq` class is used by several functions within the TropFishR package (e.g. `plot.lfq`). A separate tutorial exists detailing the creation of such objects from scratch, but here is a small example that passes variables from alba to a new lfq object.
+An `lfq` class dataset is essentially a `list` containing the following elements: a catch frequency matrix (`lfq$catch`), a vector of mid-lengths (`lfq$midLengths`) corresponding to rows of the catch matrix, and a vector of dates (`lfq$dates`) corresponding to the columns of the catch matrix. The `lfq` class is used by several functions within the TropFishR package (e.g. `plot.lfq`). A separate tutorial exists detailing the creation of such objects from scratch ([link](https://cran.r-project.org/package=TropFishR/vignettes/lfqData.html)), but here is a small example that passes variables from alba to a new lfq object.
 
 First, the three elements are added to a list:
 
@@ -187,7 +187,6 @@ alba2 <- ELEFAN(
   cross.date = alba$dates[3],
   cross.midLength = alba$midLengths[5],
   contour = TRUE, add.values = FALSE,
-  plot = TRUE,
   hide.progressbar = TRUE # change to 'TRUE' to follow algorithm's progression
 )
 points(alba2$par["Linf"], alba2$par["K"], pch="*", cex=2, col=2)
@@ -226,8 +225,8 @@ alba3 <- ELEFAN_SA(
   low_par = list(Linf=PW$confidenceInt_Linf[1], K=1, t_anchor=0, ts=0, C=0),
   up_par = list(Linf=PW$confidenceInt_Linf[2], K=4, t_anchor=1, ts=1, C=1),
   SA_temp = 2e5,
-  SA_time = 60,
-  maxit = 400,
+  SA_time = 60 * 0.5, ## 60
+  maxit = 100, ## 400
   MA = 7,
   plot.score = TRUE,
   verbose = FALSE
@@ -261,7 +260,7 @@ alba4 <- ELEFAN_GA(
   up_par = list(Linf=PW$confidenceInt_Linf[2], K=4, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = 0.2,
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 7,
   plot.score = TRUE,
@@ -300,7 +299,7 @@ alba5 <- ELEFAN_GA(
   up_par = list(Linf=PW$confidenceInt_Linf[2], K=4, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = 0.2,
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 7,
   plot.score = TRUE,
@@ -335,7 +334,7 @@ synLFQ4 <- ELEFAN_GA(
   up_par = list(Linf=110, K=1, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = 0.2,
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 11,
   plot.score = TRUE,
@@ -377,7 +376,7 @@ synLFQ4 <- ELEFAN_GA(
   up_par = list(Linf=110, K=1, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = function(...) GA::ga_pmutation(..., p0=0.5, p=0.1),
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 11,
   plot.score = TRUE,

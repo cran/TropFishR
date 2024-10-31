@@ -333,7 +333,7 @@ ELEFAN <- function(lfq, Linf_fix = NA, Linf_range = NA,
 
 
   # Graphs
-  if(plot && is.na(Linf_fix)){
+  if(is.na(Linf_fix)){
     plot_dat <- reshape2::melt(score_mat)
 
     image(
@@ -356,7 +356,7 @@ ELEFAN <- function(lfq, Linf_fix = NA, Linf_range = NA,
         }
       }
     }
-  } else if(plot){
+  } else {
     if(all(Ks %in% exp(seq(log(0.1),log(10),length.out=100)))){
       K_labels <- c(seq(0.1,1,0.1),2:10)
       K_plot <- log10(Ks)

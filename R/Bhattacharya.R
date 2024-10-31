@@ -204,10 +204,9 @@ Bhattacharya <- function(param, n_rnorm = 1000, savePlots = FALSE){
           title(xlab = "L", outer = TRUE, line = 2.5)
         }
         # identify regression line
-          if(xy > 1) rm(id.co1)
-              id.co1 <- identify(bhat.table$L, bhat.table$delta.log.N1.plus,
-                                 n = 2, pos = TRUE)
-              if(length(id.co1$ind) == 0) break
+        if(xy > 1) rm(id.co1)
+        id.co1 <- identify(bhat.table$L, bhat.table$delta.log.N1.plus, n = 2, pos = TRUE)
+        if(length(id.co1$ind) == 0) break
 
         colour.vec[id.co1$ind[1]:id.co1$ind[2]] <- colour.xy[xy]
         dev.off()

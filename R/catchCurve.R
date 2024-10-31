@@ -382,8 +382,7 @@ catchCurve <- function(param,
 
     cutterList <- vector("list", reg_num)
   #identify plot
-    if(is.null(reg_int) && !auto){
-
+    if(is.null(reg_int) & !auto){
         if(interactive()){
     writeLines("Please choose the minimum and maximum point in the graph \nto include for the regression line!")
     flush.console()

@@ -77,7 +77,6 @@ alba2 <- ELEFAN(
   cross.date = alba$dates[3],
   cross.midLength = alba$midLengths[5],
   contour = TRUE, add.values = FALSE,
-  plot = TRUE,
   hide.progressbar = TRUE # change to 'TRUE' to follow algorithm's progression
 )
 points(alba2$par["Linf"], alba2$par["K"], pch="*", cex=2, col=2)
@@ -97,8 +96,8 @@ alba3 <- ELEFAN_SA(
   low_par = list(Linf=PW$confidenceInt_Linf[1], K=1, t_anchor=0, ts=0, C=0),
   up_par = list(Linf=PW$confidenceInt_Linf[2], K=4, t_anchor=1, ts=1, C=1),
   SA_temp = 2e5,
-  SA_time = 60,
-  maxit = 400,
+  SA_time = 60 * 0.5, ## 60
+  maxit = 100, ## 400
   MA = 7,
   plot.score = TRUE,
   verbose = FALSE
@@ -118,7 +117,7 @@ alba4 <- ELEFAN_GA(
   up_par = list(Linf=PW$confidenceInt_Linf[2], K=4, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = 0.2,
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 7,
   plot.score = TRUE,
@@ -140,7 +139,7 @@ alba5 <- ELEFAN_GA(
   up_par = list(Linf=PW$confidenceInt_Linf[2], K=4, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = 0.2,
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 7,
   plot.score = TRUE,
@@ -164,7 +163,7 @@ synLFQ4 <- ELEFAN_GA(
   up_par = list(Linf=110, K=1, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = 0.2,
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 11,
   plot.score = TRUE,
@@ -193,7 +192,7 @@ synLFQ4 <- ELEFAN_GA(
   up_par = list(Linf=110, K=1, t_anchor=1, ts=1, C=1),
   popSize = 60,
   pmutation = function(...) GA::ga_pmutation(..., p0=0.5, p=0.1),
-  maxiter = 100,
+  maxiter = 50, ## 100
   run = 20,
   MA = 11,
   plot.score = TRUE,
