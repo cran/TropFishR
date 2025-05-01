@@ -13,11 +13,11 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.width=8, fig.height=7)
 
 ## ----echo = TRUE, include = TRUE, eval = FALSE--------------------------------
-#  install.packages("TropFishR", repos = "https://cran.rstudio.com/")
+# install.packages("TropFishR", repos = "https://cran.rstudio.com/")
 
 ## ----eval=FALSE, echo=TRUE----------------------------------------------------
-#  install.packages("remotes")
-#  remotes::install_github("tokami/TropFishR")
+# install.packages("remotes")
+# remotes::install_github("tokami/TropFishR")
 
 ## ----eval=TRUE, echo=TRUE-----------------------------------------------------
 library(TropFishR)
@@ -89,35 +89,35 @@ res_GA$par
 res_GA$Rn_max
 
 ## ----eval = FALSE, echo = TRUE------------------------------------------------
-#  ## list for results
-#  JK <- vector("list", length(lfq_bin2$dates))
-#  
-#  ## loop
-#  for(i in 1:length(lfq_bin2$dates)){
-#    loop_data <- list(dates = lfq_bin2$dates[-i],
-#                    midLengths = lfq_bin2$midLengths,
-#                    catch = lfq_bin2$catch[,-i])
-#    tmp <- ELEFAN_GA(loop_data, MA = ma, seasonalised = TRUE,
-#                      maxiter = 50, addl.sqrt = FALSE,
-#                      low_par = low_par,
-#                      up_par = up_par,
-#                      monitor = FALSE, plot = FALSE)
-#    JK[[i]] <- unlist(c(tmp$par, list(Rn_max=tmp$Rn_max)))
-#  }
-#  
-#  ## bind list into dataframe
-#  JKres <- do.call(cbind, JK)
-#  
-#  ## mean
-#  JKmeans <- apply(as.matrix(JKres), MARGIN = 1, FUN = mean)
-#  
-#  ## confidence intervals
-#  JKconf <- apply(as.matrix(JKres), MARGIN = 1, FUN = function(x) quantile(x, probs=c(0.025,0.975)))
-#  JKconf <- t(JKconf)
-#  colnames(JKconf) <- c("lower","upper")
-#  
-#  ## show results
-#  JKconf
+# ## list for results
+# JK <- vector("list", length(lfq_bin2$dates))
+# 
+# ## loop
+# for(i in 1:length(lfq_bin2$dates)){
+#   loop_data <- list(dates = lfq_bin2$dates[-i],
+#                   midLengths = lfq_bin2$midLengths,
+#                   catch = lfq_bin2$catch[,-i])
+#   tmp <- ELEFAN_GA(loop_data, MA = ma, seasonalised = TRUE,
+#                     maxiter = 50, addl.sqrt = FALSE,
+#                     low_par = low_par,
+#                     up_par = up_par,
+#                     monitor = FALSE, plot = FALSE)
+#   JK[[i]] <- unlist(c(tmp$par, list(Rn_max=tmp$Rn_max)))
+# }
+# 
+# ## bind list into dataframe
+# JKres <- do.call(cbind, JK)
+# 
+# ## mean
+# JKmeans <- apply(as.matrix(JKres), MARGIN = 1, FUN = mean)
+# 
+# ## confidence intervals
+# JKconf <- apply(as.matrix(JKres), MARGIN = 1, FUN = function(x) quantile(x, probs=c(0.025,0.975)))
+# JKconf <- t(JKconf)
+# colnames(JKconf) <- c("lower","upper")
+# 
+# ## show results
+# JKconf
 
 ## ----Figure 6, echo = TRUE, fig.cap="Graphical fit of estimated and true growth curves plotted through the length frequency data. The growth curves with the true values are displayed in grey, while the blue and green curves represent the curves of ELEFAN_SA and ELEFAN_GA, respectively."----
 ## plot LFQ and growth curves

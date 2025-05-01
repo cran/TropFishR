@@ -1,8 +1,8 @@
 Package: TropFishR
 Type: Package
 Title: Tropical Fisheries Analysis
-Version: 1.6.5
-Date: 2024-10-21
+Version: 1.6.6
+Date: 2025-04-06
 Authors@R: c(person(given = c("Tobias", "K."),
                     family = "Mildenberger",
                     role = c("aut", "cre"),
@@ -16,7 +16,7 @@ Authors@R: c(person(given = c("Tobias", "K."),
                     role = "aut"))
 Depends: R (>= 3.0.0)
 Imports: Matrix, msm, reshape2, MASS, GenSA, GA, stats, utils,
-        propagate, parallel, doParallel
+        parallel, doParallel
 LazyData: true
 Description: A compilation of fish stock assessment methods for the
     analysis of length-frequency data in the context of data-poor
@@ -32,11 +32,11 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Suggests: graphics, grDevices, knitr, rmarkdown, plyr
 VignetteBuilder: knitr
-Packaged: 2024-10-31 08:17:41 UTC; tobm
-Author: Tobias K. Mildenberger [aut, cre]
-    (<https://orcid.org/0000-0002-6631-7524>),
+Packaged: 2025-05-01 14:41:52 UTC; tobm
+Author: Tobias K. Mildenberger [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-6631-7524>),
   Marc H. Taylor [aut],
   Matthias Wolff [aut]
 Maintainer: Tobias K. Mildenberger <t.k.mildenberger@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-10-31 09:30:02 UTC
+Date/Publication: 2025-05-01 15:40:02 UTC
